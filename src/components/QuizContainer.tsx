@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { questions } from '@/data/questions'
 import { QuizState } from '@/types/quiz'
 import QuizStep from './QuizStep'
