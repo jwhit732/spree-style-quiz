@@ -89,19 +89,19 @@ export default function QuizContainer() {
     const archetypeImages = questions.find(q => q.type === 'image')?.options || []
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 py-8 md:py-12 px-6 md:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 py-6 md:py-8 px-6 md:px-8">
         <motion.div 
           className="max-w-4xl mx-auto text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-primary-900 mb-8 md:mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6 md:mb-8">
             Discover Your Style Archetype
           </h1>
 
           {/* Animated Carousel */}
-          <div className="mb-8 md:mb-12 overflow-hidden relative">
+          <div className="mb-6 md:mb-8 overflow-hidden relative">
             <div className="absolute inset-y-0 left-0 w-8 md:w-16 bg-gradient-to-r from-primary-50 to-transparent z-10"></div>
             <div className="absolute inset-y-0 right-0 w-8 md:w-16 bg-gradient-to-l from-primary-50 to-transparent z-10"></div>
             
@@ -144,15 +144,15 @@ export default function QuizContainer() {
             </motion.div>
           </div>
 
-          <div className="max-w-2xl mx-auto space-y-6 md:space-y-8">
-            <p className="text-primary-700 text-xl leading-relaxed">
+          <div className="max-w-2xl mx-auto space-y-5 md:space-y-6">
+            <p className="text-primary-700 text-base leading-relaxed">
               This short quiz helps uncover your authentic style – based on what you like, 
               how you see yourself, and how you want to be seen.
             </p>
-            <p className="text-primary-600 text-lg leading-relaxed">
+            <p className="text-primary-600 text-sm leading-relaxed">
               Choose what feels most like you. Don't overthink it – just choose what feels right.
             </p>
-            <p className="text-primary-500 text-lg leading-relaxed">
+            <p className="text-primary-500 text-xs leading-relaxed">
               There are 155 possible combinations — style is deeply personal, 
               and this is a great first step to articulating yours.
             </p>
@@ -160,7 +160,7 @@ export default function QuizContainer() {
 
           <motion.button
             onClick={startQuiz}
-            className="btn-primary text-lg md:text-xl px-10 py-4 mt-8 md:mt-12"
+            className="btn-primary text-base px-8 py-3 mt-6 md:mt-8"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
