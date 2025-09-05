@@ -26,7 +26,7 @@
 
 @layer components {
   .quiz-card {
-    @apply bg-white rounded-xl border border-primary-200 p-6 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer;
+    @apply bg-white rounded-xl border border-primary-200 p-3 md:p-6 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer;
   }
   
   .quiz-card:hover {

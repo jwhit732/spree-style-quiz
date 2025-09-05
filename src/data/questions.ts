@@ -152,11 +152,11 @@ export const questions: Question[] = [
   {
     id: 'personality',
     title: 'Which words feel most like you?',
-    subtitle: 'Choose up to 6 total across all sections',
+    subtitle: 'Choose up to 6 words total',
     type: 'multiple',
     maxSelections: 6,
     options: [
-      // Personality
+      // Column 1: Personality traits
       { id: 'a1', text: 'Organised', archetype: 'classic' },
       { id: 'a2', text: 'Easygoing', archetype: 'natural' },
       { id: 'a3', text: 'Feminine', archetype: 'romantic' },
@@ -164,7 +164,7 @@ export const questions: Question[] = [
       { id: 'a5', text: 'Quirky', archetype: 'creative' },
       { id: 'a6', text: 'Defiant', archetype: 'rebellious' },
       
-      // How you want to come across
+      // Column 2: How you want to come across
       { id: 'b1', text: 'Daring', archetype: 'bold' },
       { id: 'b2', text: 'Approachable', archetype: 'natural' },
       { id: 'b3', text: 'Powerful', archetype: 'bold' },
@@ -172,7 +172,7 @@ export const questions: Question[] = [
       { id: 'b5', text: 'Sensible', archetype: 'classic' },
       { id: 'b6', text: 'Innovative', archetype: 'creative' },
       
-      // What matters most in your style
+      // Column 3: What matters most in style
       { id: 'c1', text: 'Breaking the rules', archetype: 'rebellious' },
       { id: 'c2', text: 'Comfort', archetype: 'natural' },
       { id: 'c3', text: 'Neatness', archetype: 'classic' },

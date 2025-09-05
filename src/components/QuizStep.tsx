@@ -68,31 +68,31 @@ export default function QuizStep({
 
   return (
     <motion.div
-      className="w-full max-w-4xl mx-auto px-6"
-      initial={{ opacity: 0, x: 30 }}
+      className="w-full max-w-4xl mx-auto px-4 md:px-6"
+      initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
+      exit={{ opacity: 0, x: -20 }}
       transition={{ 
-        duration: 0.25,
-        ease: [0.4, 0, 0.2, 1] // Custom easing for smoother animation
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1]
       }}
     >
-      {/* Question Header */}
-      <div className="text-center mb-12">
-        <p className="text-primary-600 text-sm font-medium mb-2">
+      {/* Question Header - Ultra compact on mobile */}
+      <div className="text-center mb-4 md:mb-8">
+        <p className="text-primary-600 text-xs md:text-sm font-medium mb-1 md:mb-2">
           Question {stepNumber} of {totalSteps}
         </p>
-        <h2 className="text-2xl md:text-3xl font-semibold text-primary-900 mb-4">
+        <h2 className="text-lg md:text-3xl font-semibold text-primary-900 mb-2 md:mb-4 leading-tight px-2">
           {question.title}
         </h2>
         {question.subtitle && (
-          <p className="text-primary-700 text-lg">
+          <p className="text-primary-700 text-sm md:text-lg px-2">
             {question.subtitle}
           </p>
         )}
         {question.type === 'multiple' && question.maxSelections && (
-          <div className="mt-4 p-3 bg-accent-50 rounded-lg inline-block">
-            <p className="text-accent-700 text-sm font-medium">
+          <div className="mt-2 md:mt-4 p-2 md:p-3 bg-accent-50 rounded-lg inline-block">
+            <p className="text-accent-700 text-xs md:text-sm font-medium">
               {getSelectedCount()} of {question.maxSelections} selected
             </p>
           </div>
@@ -100,19 +100,21 @@ export default function QuizStep({
       </div>
 
       {/* Options Grid */}
-      <div className={`mb-12 ${
+      <div className={`mb-4 md:mb-12 ${
         question.type === 'image' 
-          ? 'grid grid-cols-2 md:grid-cols-3 gap-6'
-          : 'space-y-4'
+          ? 'grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6'
+          : question.type === 'multiple' 
+          ? 'grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4'
+          : 'space-y-2 md:space-y-4'
       }`}>
         {question.options.map((option, index) => (
           <motion.div
             key={option.id}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ 
-              duration: 0.2, 
-              delay: index * 0.05,
+              duration: 0.3, 
+              delay: index * 0.08,
               ease: [0.4, 0, 0.2, 1]
             }}
           >
@@ -128,11 +130,11 @@ export default function QuizStep({
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-3">
         <button
           onClick={onPrevious}
           disabled={isFirst}
-          className={`btn-secondary flex items-center space-x-2 ${
+          className={`btn-secondary flex items-center space-x-1 md:space-x-2 px-3 md:px-8 py-2 md:py-3 text-sm md:text-base ${
             isFirst ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
@@ -143,7 +145,7 @@ export default function QuizStep({
         <button
           onClick={onNext}
           disabled={!canProceed}
-          className={`btn-primary flex items-center space-x-2 ${
+          className={`btn-primary flex items-center space-x-1 md:space-x-2 px-3 md:px-8 py-2 md:py-3 text-sm md:text-base flex-1 md:flex-initial justify-center ${
             !canProceed ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >

@@ -82,8 +82,8 @@ export default function QuestionCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-start space-x-4">
-        <div className={`flex-shrink-0 mt-1 w-5 h-5 rounded-full border-2 transition-all duration-200 ${
+      <div className="flex items-start space-x-3 md:space-x-4">
+        <div className={`flex-shrink-0 mt-0.5 w-4 h-4 md:w-5 md:h-5 rounded-full border-2 transition-all duration-200 ${
           isSelected 
             ? 'bg-accent-500 border-accent-500' 
             : 'border-primary-300 hover:border-primary-400'
@@ -95,12 +95,12 @@ export default function QuestionCard({
               animate={{ scale: 1 }}
               transition={{ duration: 0.2 }}
             >
-              <CheckCircle className="w-3 h-3 text-white" />
+              <CheckCircle className="w-2.5 h-2.5 md:w-3 md:h-3 text-white" />
             </motion.div>
           )}
         </div>
         <div className="flex-1">
-          <p className="text-primary-900 font-medium leading-relaxed">
+          <p className="text-primary-900 font-medium leading-snug md:leading-relaxed text-sm md:text-base">
             {option.text}
           </p>
         </div>
