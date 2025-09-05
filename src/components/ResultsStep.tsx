@@ -85,13 +85,13 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
   if (isSubmitted) {
     return (
       <motion.div
-        className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 flex items-center justify-center px-6"
+        className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 flex items-center justify-center px-4 md:px-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <motion.div
-          className="max-w-2xl mx-auto text-center bg-white rounded-2xl p-12 shadow-xl"
+          className="max-w-2xl mx-auto text-center bg-white rounded-2xl p-6 md:p-12 shadow-xl"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -105,15 +105,15 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
             <CheckCircle className="w-8 h-8 text-green-600" />
           </motion.div>
           
-          <h2 className="text-3xl font-bold text-primary-900 mb-4">
+          <h2 className="text-xl md:text-3xl font-bold text-primary-900 mb-3 md:mb-4">
             Thank You!
           </h2>
           
-          <p className="text-lg text-primary-700 mb-6">
+          <p className="text-base md:text-lg text-primary-700 mb-4 md:mb-6">
             Your personalized {result.description.toLowerCase()} style guide is on its way to your inbox.
           </p>
           
-          <p className="text-primary-600 mb-8">
+          <p className="text-sm md:text-base text-primary-600 mb-6 md:mb-8">
             Check your email in the next few minutes for your detailed style profile and personalized recommendations.
           </p>
           
@@ -131,7 +131,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
 
   return (
     <motion.div
-      className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 py-12 px-6"
+      className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 py-6 md:py-12 px-4 md:px-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -139,16 +139,16 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
       <div className="max-w-4xl mx-auto">
         {/* Results Header */}
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-6 md:mb-12"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-primary-900 mb-4">
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-primary-900 mb-3 md:mb-4">
             Your Style Archetype Is...
           </h1>
           <motion.div
-            className="text-2xl md:text-3xl text-accent-600 font-semibold mb-6"
+            className="text-xl md:text-2xl lg:text-3xl text-accent-600 font-semibold mb-4 md:mb-6"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
@@ -158,21 +158,21 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
         </motion.div>
 
         {/* Results Content */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-12">
           {/* Primary Archetype */}
           <motion.div
-            className="bg-white rounded-2xl p-8 shadow-lg"
+            className="bg-white rounded-2xl p-4 md:p-8 shadow-lg"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            <h3 className="text-xl font-semibold text-primary-900 mb-4">
+            <h3 className="text-lg md:text-xl font-semibold text-primary-900 mb-3 md:mb-4">
               Your Primary Style
             </h3>
-            <div className="text-2xl font-bold text-accent-600 mb-4 capitalize">
+            <div className="text-xl md:text-2xl font-bold text-accent-600 mb-3 md:mb-4 capitalize">
               {result.primary}
             </div>
-            <p className="text-primary-700 text-lg leading-relaxed">
+            <p className="text-primary-700 text-sm md:text-lg leading-relaxed">
               {getPrimaryDescription()}
             </p>
           </motion.div>
@@ -180,18 +180,18 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           {/* Secondary Archetype */}
           {result.secondary && (
             <motion.div
-              className="bg-white rounded-2xl p-8 shadow-lg"
+              className="bg-white rounded-2xl p-4 md:p-8 shadow-lg"
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
             >
-              <h3 className="text-xl font-semibold text-primary-900 mb-4">
+              <h3 className="text-lg md:text-xl font-semibold text-primary-900 mb-3 md:mb-4">
                 Your Secondary Influence
               </h3>
-              <div className="text-2xl font-bold text-accent-600 mb-4 capitalize">
+              <div className="text-xl md:text-2xl font-bold text-accent-600 mb-3 md:mb-4 capitalize">
                 {result.secondary}
               </div>
-              <p className="text-primary-700 text-lg leading-relaxed">
+              <p className="text-primary-700 text-sm md:text-lg leading-relaxed">
                 {getSecondaryDescription()}
               </p>
             </motion.div>
@@ -200,31 +200,31 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
 
         {/* Email Capture Form */}
         <motion.div
-          className="bg-white rounded-2xl p-8 md:p-12 shadow-xl max-w-2xl mx-auto"
+          className="bg-white rounded-2xl p-4 md:p-8 lg:p-12 shadow-xl max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.5 }}
         >
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-primary-900 mb-4">
+          <div className="text-center mb-6 md:mb-8">
+            <h3 className="text-xl md:text-2xl font-bold text-primary-900 mb-3 md:mb-4">
               Get Your Complete Style Guide
             </h3>
-            <p className="text-primary-700 text-lg">
+            <p className="text-primary-700 text-sm md:text-lg">
               Enter your details below to receive your personalized style profile, 
               detailed recommendations, and exclusive styling tips.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-primary-900 mb-2">
-                <User className="inline w-4 h-4 mr-2" />
+              <label className="block text-xs md:text-sm font-semibold text-primary-900 mb-2">
+                <User className="inline w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
                 Name
               </label>
               <input
                 {...register('name', { required: 'Name is required' })}
                 type="text"
-                className="w-full px-4 py-3 rounded-lg border border-primary-300 focus:ring-2 focus:ring-accent-500 focus:border-transparent"
+                className="w-full px-3 py-2 md:px-4 md:py-3 rounded-lg border border-primary-300 focus:ring-2 focus:ring-accent-500 focus:border-transparent text-sm md:text-base"
                 placeholder="Your full name"
               />
               {errors.name && (
@@ -233,8 +233,8 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-primary-900 mb-2">
-                <Mail className="inline w-4 h-4 mr-2" />
+              <label className="block text-xs md:text-sm font-semibold text-primary-900 mb-2">
+                <Mail className="inline w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
                 Email
               </label>
               <input
@@ -246,7 +246,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
                   }
                 })}
                 type="email"
-                className="w-full px-4 py-3 rounded-lg border border-primary-300 focus:ring-2 focus:ring-accent-500 focus:border-transparent"
+                className="w-full px-3 py-2 md:px-4 md:py-3 rounded-lg border border-primary-300 focus:ring-2 focus:ring-accent-500 focus:border-transparent text-sm md:text-base"
                 placeholder="your.email@example.com"
               />
               {errors.email && (
@@ -257,7 +257,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full btn-primary text-base md:text-lg py-3 md:py-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <div className="flex items-center justify-center space-x-2">
@@ -269,7 +269,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
               )}
             </button>
 
-            <p className="text-center text-sm text-primary-600">
+            <p className="text-center text-xs md:text-sm text-primary-600">
               We respect your privacy and won't share your information.
             </p>
           </form>
@@ -277,12 +277,12 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
 
         {/* Additional Info */}
         <motion.div
-          className="text-center mt-8"
+          className="text-center mt-6 md:mt-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
         >
-          <p className="text-primary-600 max-w-2xl mx-auto">
+          <p className="text-primary-600 max-w-2xl mx-auto text-xs md:text-base">
             Style is deeply personal, and there are 155 possible combinations. 
             This is a great first step to articulating yours.
           </p>

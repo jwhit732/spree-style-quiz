@@ -104,7 +104,7 @@ export default function QuizStep({
         question.type === 'image' 
           ? 'grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6'
           : question.type === 'multiple' 
-          ? 'grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4'
+          ? 'grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4'
           : 'space-y-2 md:space-y-4'
       }`}>
         {question.options.map((option, index) => (
