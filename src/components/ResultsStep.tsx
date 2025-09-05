@@ -44,7 +44,13 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
       })
 
       if (response.ok) {
+        const result = await response.json()
         setIsSubmitted(true)
+        
+        // Log development mode info
+        if (result.mode === 'development') {
+          console.log('🔧 Development Mode: Quiz results logged to console')
+        }
       } else {
         throw new Error('Submission failed')
       }

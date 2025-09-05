@@ -6,13 +6,5 @@
     "src/app/api/submit-quiz/route.ts": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "AC_API_KEY": "@ac_api_key",
-    "AC_BASE_URL": "@ac_base_url",
-    "AC_FIELD_PRIMARY_ARCHETYPE": "@ac_field_primary_archetype",
-    "AC_FIELD_SECONDARY_ARCHETYPE": "@ac_field_secondary_archetype", 
-    "AC_FIELD_QUIZ_RESULT": "@ac_field_quiz_result",
-    "AC_FIELD_QUIZ_DATE": "@ac_field_quiz_date"
   }
 }

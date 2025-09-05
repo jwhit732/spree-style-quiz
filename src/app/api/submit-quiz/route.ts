@@ -13,6 +13,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Check if ActiveCampaign is configured
+    const isActiveCampaignConfigured = !!(
+      process.env.AC_API_KEY && 
+      process.env.AC_BASE_URL
+    )
+
+    if (!isActiveCampaignConfigured) {
+      // Store submission locally for now (development mode)
+      console.log('📋 Quiz Submission (ActiveCampaign not configured):', {
+        name: submission.name,
+        email: submission.email,
+        result: submission.result.description,
+        timestamp: submission.timestamp
+      })
+
+      return NextResponse.json({ 
+        success: true,
+        message: 'Quiz results submitted successfully (stored locally)',
+        mode: 'development'
+      })
+    }
+
     // Prepare data for ActiveCampaign
     const activeCampaignData = {
       contact: {
