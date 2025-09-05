@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap&text-rendering=optimizeLegibility');
+
+@layer base {
+  html {
+    font-family: 'Source Sans Pro', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  body {
+    @apply bg-primary-50 text-primary-900;
+  }
+  
+  /* Performance optimizations */
+  .quiz-card, .progress-fill, [data-framer-motion] {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
+
+@layer components {
+  .quiz-card {
+    @apply bg-white rounded-xl border border-primary-200 p-6 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer;
+  }
+  
+  .quiz-card:hover {
+    @apply border-primary-300 transform translate-y-[-2px];
+  }
+  
+  .quiz-card.selected {
+    @apply border-accent-500 bg-accent-50 shadow-md;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-primary-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-primary-900 px-8 py-3 rounded-lg font-medium border border-primary-300 hover:border-primary-400 transition-colors duration-200;
+  }
+  
+  .progress-bar {
+    @apply w-full h-2 bg-primary-200 rounded-full overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply h-full bg-gradient-to-r from-accent-500 to-accent-600 transition-all duration-500 ease-out;
+  }
+}
