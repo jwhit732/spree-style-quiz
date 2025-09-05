@@ -100,7 +100,7 @@ export default function QuestionCard({
           )}
         </div>
         <div className="flex-1">
-          <p className="text-primary-900 font-medium leading-snug md:leading-relaxed text-sm md:text-base">
+          <p className="text-primary-900 font-medium leading-snug md:leading-relaxed text-sm md:text-lg">
             {option.text}
           </p>
         </div>
