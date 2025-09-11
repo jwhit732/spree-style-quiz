@@ -9,6 +9,13 @@ export const archetypeDescriptions: Record<StyleArchetype, string> = {
   romantic: "You love clothes that feel graceful, pretty and soft."
 }
 
+export function generateArchetypeCombinationId(result: QuizResult): string {
+  let combo = result.primary
+  if (result.secondary) combo += `-${result.secondary}`
+  if (result.tertiary) combo += `-${result.tertiary}`
+  return combo
+}
+
 export function calculateQuizResult(answers: Record<string, string | string[]>): QuizResult {
   const scores: Record<StyleArchetype, number> = {
     natural: 0,
