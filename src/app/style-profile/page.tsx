@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Loader2, ArrowLeft, Home } from 'lucide-react'
@@ -15,7 +15,7 @@ interface StyleProfile {
   }
 }
 
-export default function StyleProfilePage() {
+function StyleProfileContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [profile, setProfile] = useState<StyleProfile | null>(null)
@@ -202,5 +202,28 @@ export default function StyleProfilePage() {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 flex items-center justify-center">
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <Loader2 className="w-12 h-12 text-accent-600 animate-spin mx-auto mb-4" />
+        <p className="text-lg text-primary-700">Loading your personalized style profile...</p>
+      </motion.div>
+    </div>
+  )
+}
+
+export default function StyleProfilePage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <StyleProfileContent />
+    </Suspense>
   )
 }
