@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { QuizResult, UserSubmission } from '@/types/quiz'
 import { archetypeDescriptions } from '@/utils/scoring'
 import { useForm } from 'react-hook-form'
-import { Mail, User, RotateCcw, CheckCircle } from 'lucide-react'
+import { Mail, User } from 'lucide-react'
 
 interface ResultsStepProps {
   result: QuizResult
@@ -18,46 +18,35 @@ interface FormData {
 }
 
 export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
-    
+
     try {
-      const submission: UserSubmission = {
+      // Encode the quiz result data to pass via URL
+      const resultData = encodeURIComponent(JSON.stringify({
         name: data.name,
         email: data.email,
-        result,
+        primary: result.primary,
+        secondary: result.secondary,
+        tertiary: result.tertiary,
+        description: result.description,
         timestamp: new Date().toISOString()
-      }
+      }))
 
-      // Send to ActiveCampaign (we'll implement this next)
-      const response = await fetch('/api/submit-quiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submission),
-      })
-
-      if (response.ok) {
-        const result = await response.json()
-        setIsSubmitted(true)
-        
-        // Log development mode info
-        if (result.mode === 'development') {
-          console.log('🔧 Development Mode: Quiz results logged to console')
-        }
-      } else {
-        throw new Error('Submission failed')
-      }
+      // Redirect to style profile page with results
+      window.location.href = `/style-profile?data=${resultData}`
     } catch (error) {
-      console.error('Error submitting quiz:', error)
-      // For now, just show success (we'll handle errors properly later)
-      setIsSubmitted(true)
+      console.error('Error preparing redirect:', error)
+      // Fallback: still redirect without full data
+      const params = new URLSearchParams()
+      params.append('primary', result.primary)
+      if (result.secondary) params.append('secondary', result.secondary)
+      if (result.tertiary) params.append('tertiary', result.tertiary)
+      window.location.href = `/style-profile?${params.toString()}`
     } finally {
       setIsSubmitting(false)
     }
@@ -80,53 +69,6 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
     }
     
     return descriptions[result.secondary]
-  }
-
-  if (isSubmitted) {
-    return (
-      <motion.div
-        className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 flex items-center justify-center px-4 md:px-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div
-          className="max-w-2xl mx-auto text-center bg-white rounded-2xl p-6 md:p-12 shadow-xl"
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.3 }}
-            className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
-          >
-            <CheckCircle className="w-8 h-8 text-green-600" />
-          </motion.div>
-          
-          <h2 className="text-xl md:text-3xl font-bold text-primary-900 mb-3 md:mb-4">
-            Thank You!
-          </h2>
-          
-          <p className="text-base md:text-lg text-primary-700 mb-4 md:mb-6">
-            Your personalized {result.description.toLowerCase()} style guide is on its way to your inbox.
-          </p>
-          
-          <p className="text-sm md:text-base text-primary-600 mb-6 md:mb-8">
-            Check your email in the next few minutes for your detailed style profile and personalized recommendations.
-          </p>
-          
-          <button
-            onClick={onRestart}
-            className="btn-secondary flex items-center space-x-2 mx-auto"
-          >
-            <RotateCcw className="w-4 h-4" />
-            <span>Take Quiz Again</span>
-          </button>
-        </motion.div>
-      </motion.div>
-    )
   }
 
   return (
