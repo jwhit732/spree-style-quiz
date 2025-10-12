@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Question } from '@/types/quiz'
 import QuestionCard from './QuestionCard'
@@ -30,7 +31,12 @@ export default function QuizStep({
   stepNumber,
   totalSteps
 }: QuizStepProps) {
-  
+
+  // Scroll to top when question changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [question.id])
+
   const handleOptionSelect = (optionId: string) => {
     if (question.type === 'multiple') {
       const currentSelections = Array.isArray(currentAnswer) ? currentAnswer : []
