@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { QuizResult, UserSubmission } from '@/types/quiz'
 import { archetypeDescriptions } from '@/utils/scoring'
 import { useForm } from 'react-hook-form'
@@ -21,6 +21,11 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
@@ -86,16 +91,44 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-primary-900 mb-3 md:mb-4">
+          <h1 className="text-xl md:text-3xl font-bold text-primary-900 mb-3 md:mb-4">
             Thank You! Your signature style is defined as:
           </h1>
           <motion.div
-            className="text-xl md:text-2xl lg:text-3xl text-accent-600 font-semibold mb-4 md:mb-6"
+            className="relative inline-block"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            {result.description}
+            {/* Glow effect background */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-accent-400/20 via-accent-500/30 to-accent-400/20 blur-xl rounded-full"
+              animate={{
+                opacity: [0.5, 0.8, 0.5],
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            {/* Shimmer effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+              animate={{
+                x: ['-200%', '200%'],
+              }}
+              transition={{
+                duration: 2,
+                delay: 0.5,
+                ease: "easeInOut"
+              }}
+            />
+            {/* Text content */}
+            <div className="relative text-xl md:text-3xl text-accent-600 font-semibold mb-4 md:mb-6 px-6">
+              {result.description}
+            </div>
           </motion.div>
         </motion.div>
 
@@ -108,13 +141,13 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            <h3 className="text-lg md:text-xl font-semibold text-primary-900 mb-3 md:mb-4">
+            <h3 className="text-base md:text-lg font-semibold text-primary-900 mb-3 md:mb-4">
               Your Primary Style
             </h3>
-            <div className="text-xl md:text-2xl font-bold text-accent-600 mb-3 md:mb-4 capitalize">
+            <div className="text-lg md:text-xl font-bold text-accent-600 mb-3 md:mb-4 capitalize">
               {result.primary}
             </div>
-            <p className="text-primary-700 text-sm md:text-lg leading-relaxed">
+            <p className="text-primary-700 text-sm md:text-base leading-relaxed">
               {getPrimaryDescription()}
             </p>
           </motion.div>
@@ -127,13 +160,13 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
             >
-              <h3 className="text-lg md:text-xl font-semibold text-primary-900 mb-3 md:mb-4">
+              <h3 className="text-base md:text-lg font-semibold text-primary-900 mb-3 md:mb-4">
                 Your Secondary Influence
               </h3>
-              <div className="text-xl md:text-2xl font-bold text-accent-600 mb-3 md:mb-4 capitalize">
+              <div className="text-lg md:text-xl font-bold text-accent-600 mb-3 md:mb-4 capitalize">
                 {result.secondary}
               </div>
-              <p className="text-primary-700 text-sm md:text-lg leading-relaxed">
+              <p className="text-primary-700 text-sm md:text-base leading-relaxed">
                 {getSecondaryDescription()}
               </p>
             </motion.div>
@@ -148,11 +181,11 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           transition={{ delay: 0.6, duration: 0.5 }}
         >
           <div className="text-center mb-6 md:mb-8">
-            <h3 className="text-xl md:text-2xl font-bold text-primary-900 mb-3 md:mb-4">
+            <h3 className="text-lg md:text-xl font-bold text-primary-900 mb-3 md:mb-4">
               Get A Complete Description of Your Signature Style
             </h3>
-            <p className="text-primary-700 text-sm md:text-lg">
-              To understand what that means exactly, enter your email to receive your full description of your signature style with specific advice  
+            <p className="text-primary-700 text-sm md:text-base">
+              To understand what that means exactly, enter your email to receive your full description of your signature style with specific advice
               detailed recommendations, and exclusive styling advice.
             </p>
           </div>
