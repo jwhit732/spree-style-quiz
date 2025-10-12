@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Loader2, ArrowLeft, Home, Share2, Check, Facebook, Instagram, Send } from 'lucide-react'
+import { Loader2, ArrowLeft, Home, Share2, Check, Facebook, Send } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 interface StyleProfile {
@@ -239,7 +239,7 @@ function StyleProfileContent() {
   }
 
   // Handle social media shares
-  const handleSocialShare = (platform: 'facebook' | 'instagram' | 'whatsapp') => {
+  const handleSocialShare = (platform: 'facebook' | 'pinterest' | 'whatsapp') => {
     const { socialText, quizUrl } = getShareContent()
     const fullText = `${socialText} ${quizUrl}`
 
@@ -249,12 +249,10 @@ function StyleProfileContent() {
         const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(quizUrl)}`
         window.open(facebookUrl, '_blank', 'width=600,height=400')
         break
-      case 'instagram':
-        // Instagram doesn't have a direct web share URL
-        // Copy text to clipboard and guide user to post
-        navigator.clipboard.writeText(fullText).then(() => {
-          alert(`📋 Message copied to clipboard!\n\nNow:\n1. Open Instagram\n2. Create a Story or Post\n3. Paste the message\n4. Share your style! ✨`)
-        })
+      case 'pinterest':
+        // Pinterest supports pre-filled description and URL
+        const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(quizUrl)}&description=${encodeURIComponent(fullText)}`
+        window.open(pinterestUrl, '_blank', 'width=750,height=550')
         break
       case 'whatsapp':
         const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(fullText)}`
@@ -374,14 +372,16 @@ function StyleProfileContent() {
               <span className="hidden sm:inline">Facebook</span>
             </button>
 
-            {/* Instagram */}
+            {/* Pinterest */}
             <button
-              onClick={() => handleSocialShare('instagram')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-90 text-white font-medium transition-opacity shadow-md hover:shadow-lg"
-              aria-label="Share on Instagram"
+              onClick={() => handleSocialShare('pinterest')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#E60023] hover:bg-[#CC001F] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+              aria-label="Share on Pinterest"
             >
-              <Instagram className="w-4 h-4" />
-              <span className="hidden sm:inline">Instagram</span>
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
+              </svg>
+              <span className="hidden sm:inline">Pinterest</span>
             </button>
 
             {/* WhatsApp */}
