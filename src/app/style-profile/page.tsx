@@ -201,26 +201,25 @@ function StyleProfileContent() {
   // Generate share content
   const getShareContent = () => {
     const styleDescription = fields.slug?.replace(/-/g, ' · ') || 'my style'
-    const quizUrl = 'https://spreewithme.com.au/style-quiz' // Update with your actual domain
-    const profileUrl = window.location.href
+    // Always share the quiz homepage, not the profile page
+    const quizUrl = 'https://spreewithme.com.au/style-quiz'
 
     return {
       styleDescription,
       // Social media post text
       socialText: `I just discovered my style profile is ${styleDescription.toUpperCase()}! 💫 Would you agree? Check yours here:`,
-      quizUrl,
-      profileUrl
+      quizUrl
     }
   }
 
   // Handle native share functionality
   const handleShare = async () => {
-    const { styleDescription, socialText, quizUrl, profileUrl } = getShareContent()
+    const { styleDescription, socialText, quizUrl } = getShareContent()
 
     const shareData = {
-      title: 'My Signature Style Profile',
+      title: 'Discover Your Signature Style',
       text: `${socialText} ${quizUrl}`,
-      url: profileUrl
+      url: quizUrl
     }
 
     try {
@@ -230,7 +229,7 @@ function StyleProfileContent() {
         await navigator.share(shareData)
       } else {
         // Fallback to clipboard for desktop browsers
-        await navigator.clipboard.writeText(profileUrl)
+        await navigator.clipboard.writeText(quizUrl)
         setShareStatus('copied')
         setTimeout(() => setShareStatus('idle'), 2000)
       }
@@ -242,12 +241,12 @@ function StyleProfileContent() {
 
       // If share fails, try clipboard as fallback
       try {
-        await navigator.clipboard.writeText(profileUrl)
+        await navigator.clipboard.writeText(quizUrl)
         setShareStatus('copied')
         setTimeout(() => setShareStatus('idle'), 2000)
       } catch (clipboardErr) {
         console.error('Error copying to clipboard:', clipboardErr)
-        alert('Unable to share. Please copy this link manually: ' + profileUrl)
+        alert('Unable to share. Please copy this link manually: ' + quizUrl)
       }
     }
   }
