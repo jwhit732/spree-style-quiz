@@ -50,6 +50,9 @@ function StyleProfileContent() {
   }
 
   useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
     async function fetchProfile() {
       try {
         // Get parameters from URL
@@ -221,19 +224,30 @@ function StyleProfileContent() {
     }
 
     try {
-      // Try native Web Share API first (works on mobile)
-      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      // Check if Web Share API is available
+      if (navigator.share) {
+        // Try to share
         await navigator.share(shareData)
       } else {
-        // Fallback to clipboard (works on desktop)
+        // Fallback to clipboard for desktop browsers
         await navigator.clipboard.writeText(profileUrl)
         setShareStatus('copied')
         setTimeout(() => setShareStatus('idle'), 2000)
       }
     } catch (err) {
-      // If user cancels share dialog or clipboard fails, just ignore
-      if (err instanceof Error && err.name !== 'AbortError') {
-        console.error('Error sharing:', err)
+      // If user cancels share dialog, silently ignore
+      if (err instanceof Error && err.name === 'AbortError') {
+        return
+      }
+
+      // If share fails, try clipboard as fallback
+      try {
+        await navigator.clipboard.writeText(profileUrl)
+        setShareStatus('copied')
+        setTimeout(() => setShareStatus('idle'), 2000)
+      } catch (clipboardErr) {
+        console.error('Error copying to clipboard:', clipboardErr)
+        alert('Unable to share. Please copy this link manually: ' + profileUrl)
       }
     }
   }
