@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Loader2, ArrowLeft, Home } from 'lucide-react'
+import { Loader2, ArrowLeft, Home, Share2, Check } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 interface StyleProfile {
@@ -23,6 +23,7 @@ function StyleProfileContent() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [userName, setUserName] = useState<string>('')
+  const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle')
 
   // Format text with paragraph breaks after first sentence and every 2-3 sentences
   const formatTextWithBreaks = (text: string) => {
@@ -194,6 +195,35 @@ function StyleProfileContent() {
 
   const { fields } = profile
 
+  // Handle share functionality
+  const handleShare = async () => {
+    const shareUrl = window.location.href
+    const styleDescription = fields.slug?.replace(/-/g, ' · ') || 'my style'
+
+    const shareData = {
+      title: 'My Signature Style Profile',
+      text: `I just discovered my signature style! Check out my ${styleDescription} style profile from Spree with Me.`,
+      url: shareUrl
+    }
+
+    try {
+      // Try native Web Share API first (works on mobile)
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData)
+      } else {
+        // Fallback to clipboard (works on desktop)
+        await navigator.clipboard.writeText(shareUrl)
+        setShareStatus('copied')
+        setTimeout(() => setShareStatus('idle'), 2000)
+      }
+    } catch (err) {
+      // If user cancels share dialog or clipboard fails, just ignore
+      if (err instanceof Error && err.name !== 'AbortError') {
+        console.error('Error sharing:', err)
+      }
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 py-8 md:py-12 px-4 md:px-6">
       <div className="max-w-5xl mx-auto">
@@ -260,11 +290,27 @@ function StyleProfileContent() {
 
         {/* Footer CTA */}
         <motion.div
-          className="mt-12 text-center"
+          className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
+          <button
+            onClick={handleShare}
+            className="btn-primary flex items-center space-x-2"
+          >
+            {shareStatus === 'copied' ? (
+              <>
+                <Check className="w-4 h-4" />
+                <span>Link Copied!</span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-4 h-4" />
+                <span>Share My Style</span>
+              </>
+            )}
+          </button>
           <button
             onClick={() => router.push('/')}
             className="btn-secondary"
