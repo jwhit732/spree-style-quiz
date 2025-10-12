@@ -129,7 +129,7 @@ export default function QuizContainer() {
                 >
                   <img
                     src={archetype.imageUrl}
-                    alt={archetype.imageAlt || archetype.text}
+                    {/* REMOVING ALT I HOPE JAMES  alt={archetype.imageAlt || archetype.text}*/}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -153,8 +153,7 @@ export default function QuizContainer() {
               Choose what feels most like you. Don't overthink it – just choose what feels right.
             </p>
             <p className="text-primary-500 text-xs leading-relaxed">
-              There are 155 possible combinations — style is deeply personal, 
-              and this is a great first step to articulating yours.
+              Style is deeply personal, and there are 155 possible combinations. Read more in-depth information about your style. This is a great first step to articulating yours.
             </p>
           </div>
 

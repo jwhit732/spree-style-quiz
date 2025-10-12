@@ -12,7 +12,12 @@
       "Bash(git push:*)",
       "Bash(npm run dev:*)",
       "Bash(git checkout:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(node:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm install:*)",
+      "Bash(test:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

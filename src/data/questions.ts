@@ -225,7 +225,7 @@ export const questions: Question[] = [
     options: [
       {
         id: 'a',
-        text: 'Rebellious',
+        {/* text: 'Rebellious', */}
         archetype: 'rebellious',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/52d4e589-1d92-48d6-a8b8-6e0de7423afe/Rebellious+archetype+image.png?content-type=image%2Fpng',
@@ -233,7 +233,7 @@ export const questions: Question[] = [
       },
       {
         id: 'b',
-        text: 'Romantic',
+        {/*text: 'Romantic',*/}
         archetype: 'romantic',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/470e1ed2-a4f2-47c1-be94-7691a8914cf3/Romatic+image+high+res.png?content-type=image%2Fpng',
@@ -241,7 +241,7 @@ export const questions: Question[] = [
       },
       {
         id: 'c',
-        text: 'Bold',
+        {/*text: 'Bold',*/}
         archetype: 'bold',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/b7039ca3-d8b1-4c88-a5d1-0fcb8056100c/Bold+Style+Archetype.png?content-type=image%2Fpng',
@@ -249,7 +249,7 @@ export const questions: Question[] = [
       },
       {
         id: 'd',
-        text: 'Classic',
+        {/*text: 'Classic',*/}
         archetype: 'classic',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/b3590782-52f2-4b73-a3ff-412321cbe26e/Classic+Style+Archetype.png?content-type=image%2Fpng',
@@ -257,7 +257,7 @@ export const questions: Question[] = [
       },
       {
         id: 'e',
-        text: 'Creative',
+        {/*text: 'Creative',*/}
         archetype: 'creative',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/d7fa66d8-323d-4b0c-8e9f-25bb9669999c/Creative+style+archetype.png?content-type=image%2Fpng',
@@ -265,7 +265,7 @@ export const questions: Question[] = [
       },
       {
         id: 'f',
-        text: 'Natural',
+        {/*text: 'Natural',*/}
         archetype: 'natural',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/b18349b1-ec33-465a-b988-72eff5490a72/Natural+Style+Archetype.png?content-type=image%2Fpng',

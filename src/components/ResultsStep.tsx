@@ -87,7 +87,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-primary-900 mb-3 md:mb-4">
-            Your Style Archetype Is...
+            Thank You! Your signature style is defined as:
           </h1>
           <motion.div
             className="text-xl md:text-2xl lg:text-3xl text-accent-600 font-semibold mb-4 md:mb-6"
@@ -149,11 +149,11 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
         >
           <div className="text-center mb-6 md:mb-8">
             <h3 className="text-xl md:text-2xl font-bold text-primary-900 mb-3 md:mb-4">
-              Get Your Complete Style Guide
+              Get A Complete Description of Your Signature Style
             </h3>
             <p className="text-primary-700 text-sm md:text-lg">
-              Enter your details below to receive your personalized style profile, 
-              detailed recommendations, and exclusive styling tips.
+              To understand what that means exactly, enter your email to receive your full description of your signature style with specific advice  
+              detailed recommendations, and exclusive styling advice.
             </p>
           </div>
 
@@ -207,12 +207,12 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
                   <span>Sending...</span>
                 </div>
               ) : (
-                'Get My Style Profile'
+                'Get full description of my unique signature style'
               )}
             </button>
 
             <p className="text-center text-xs md:text-sm text-primary-600">
-              We respect your privacy and won't share your information.
+              Spree with Me and the Style Squad are here to support you. We’re a locally owned Australian company. By receiving your exclusive and unique signature style profile, you will also join us to receive occasional fashion and style news, and other stylish updates with and occasional news from us. Your details will remain private.
             </p>
           </form>
         </motion.div>
