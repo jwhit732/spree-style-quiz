@@ -229,7 +229,7 @@ export const questions: Question[] = [
         archetype: 'rebellious',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/52d4e589-1d92-48d6-a8b8-6e0de7423afe/Rebellious+archetype+image.png?content-type=image%2Fpng',
-        imageAlt: 'Rebellious style archetype',
+        imageAlt: 'Rebellious signature style',
       },
       {
         id: 'b',
@@ -237,7 +237,7 @@ export const questions: Question[] = [
         archetype: 'romantic',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/470e1ed2-a4f2-47c1-be94-7691a8914cf3/Romatic+image+high+res.png?content-type=image%2Fpng',
-        imageAlt: 'Romantic style archetype',
+        imageAlt: 'Romantic signature style',
       },
       {
         id: 'c',
@@ -245,7 +245,7 @@ export const questions: Question[] = [
         archetype: 'bold',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/b7039ca3-d8b1-4c88-a5d1-0fcb8056100c/Bold+Style+Archetype.png?content-type=image%2Fpng',
-        imageAlt: 'Bold style archetype',
+        imageAlt: 'Bold signature style',
       },
       {
         id: 'd',
@@ -253,7 +253,7 @@ export const questions: Question[] = [
         archetype: 'classic',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/b3590782-52f2-4b73-a3ff-412321cbe26e/Classic+Style+Archetype.png?content-type=image%2Fpng',
-        imageAlt: 'Classic style archetype',
+        imageAlt: 'Classic signature style',
       },
       {
         id: 'e',
@@ -261,7 +261,7 @@ export const questions: Question[] = [
         archetype: 'creative',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/d7fa66d8-323d-4b0c-8e9f-25bb9669999c/Creative+style+archetype.png?content-type=image%2Fpng',
-        imageAlt: 'Creative style archetype',
+        imageAlt: 'Creative signature style',
       },
       {
         id: 'f',
@@ -269,7 +269,7 @@ export const questions: Question[] = [
         archetype: 'natural',
         weight: 4,
         imageUrl: 'https://images.squarespace-cdn.com/content/5c3079f9f407b4ab43249324/b18349b1-ec33-465a-b988-72eff5490a72/Natural+Style+Archetype.png?content-type=image%2Fpng',
-        imageAlt: 'Natural style archetype',
+        imageAlt: 'Natural signature style',
       },
     ],
   },

@@ -97,7 +97,7 @@ export default function QuizContainer() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6 md:mb-8">
-            Discover Your Style Archetype
+            Discover Your Signature Style
           </h1>
 
           {/* Animated Carousel */}

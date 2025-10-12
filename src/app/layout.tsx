@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Discover Your Style Archetype | Spree with Me',
+  title: 'Discover Your Signature Style | Spree with Me',
   description: 'This short quiz helps uncover your authentic style – based on what you like, how you see yourself, and how you want to be seen.',
   keywords: 'style quiz, personal style, fashion archetype, style personality',
   openGraph: {
-    title: 'Discover Your Style Archetype',
+    title: 'Discover Your Signature Style',
     description: 'Take our quiz to discover your unique style personality',
     type: 'website',
   },

@@ -49,7 +49,7 @@ function StyleProfileContent() {
         }
 
         if (!primary) {
-          setError('Missing style archetype information')
+          setError('Missing signature style information')
           setLoading(false)
           return
         }

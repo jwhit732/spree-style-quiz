@@ -89,7 +89,7 @@ For embedding within an existing page:
 ## **Step 3: Squarespace Page Setup**
 
 ### Page Settings:
-- **Page Title:** "Discover Your Style Archetype"
+- **Page Title:** "Discover Your Signature Style"
 - **URL Slug:** `/style-quiz`
 - **SEO Description:** "Take our free style quiz to discover your personal fashion archetype"
 - **Header:** Hide or simplify for cleaner look
