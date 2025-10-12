@@ -32,9 +32,19 @@ export default function QuizStep({
   totalSteps
 }: QuizStepProps) {
 
-  // Scroll to top when question changes
+  // Scroll to top when question changes - force instant scroll for mobile reliability
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    // Use multiple methods for maximum compatibility with mobile browsers
+    window.scrollTo(0, 0)
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+
+    // Also try after a brief timeout to ensure DOM is ready
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }, 0)
   }, [question.id])
 
   const handleOptionSelect = (optionId: string) => {

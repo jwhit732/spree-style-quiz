@@ -23,9 +23,19 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
 
-  // Scroll to top when component mounts
+  // Scroll to top when component mounts - force instant scroll for mobile reliability
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    // Use multiple methods for maximum compatibility with mobile browsers
+    window.scrollTo(0, 0)
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+
+    // Also try after a brief timeout to ensure DOM is ready
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }, 0)
   }, [])
 
   const onSubmit = async (data: FormData) => {
