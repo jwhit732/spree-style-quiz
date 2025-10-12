@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Loader2, ArrowLeft, Home, Share2, Check } from 'lucide-react'
+import { Loader2, ArrowLeft, Home, Share2, Check, Facebook, Twitter, Send } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 interface StyleProfile {
@@ -195,15 +195,29 @@ function StyleProfileContent() {
 
   const { fields } = profile
 
-  // Handle share functionality
-  const handleShare = async () => {
-    const shareUrl = window.location.href
+  // Generate share content
+  const getShareContent = () => {
     const styleDescription = fields.slug?.replace(/-/g, ' · ') || 'my style'
+    const quizUrl = 'https://spreewithme.com.au/style-quiz' // Update with your actual domain
+    const profileUrl = window.location.href
+
+    return {
+      styleDescription,
+      // Social media post text
+      socialText: `I just discovered my style profile is ${styleDescription.toUpperCase()}! 💫 Would you agree? Check yours here:`,
+      quizUrl,
+      profileUrl
+    }
+  }
+
+  // Handle native share functionality
+  const handleShare = async () => {
+    const { styleDescription, socialText, quizUrl, profileUrl } = getShareContent()
 
     const shareData = {
       title: 'My Signature Style Profile',
-      text: `I just discovered my signature style! Check out my ${styleDescription} style profile from Spree with Me.`,
-      url: shareUrl
+      text: `${socialText} ${quizUrl}`,
+      url: profileUrl
     }
 
     try {
@@ -212,7 +226,7 @@ function StyleProfileContent() {
         await navigator.share(shareData)
       } else {
         // Fallback to clipboard (works on desktop)
-        await navigator.clipboard.writeText(shareUrl)
+        await navigator.clipboard.writeText(profileUrl)
         setShareStatus('copied')
         setTimeout(() => setShareStatus('idle'), 2000)
       }
@@ -222,6 +236,29 @@ function StyleProfileContent() {
         console.error('Error sharing:', err)
       }
     }
+  }
+
+  // Handle social media shares
+  const handleSocialShare = (platform: 'facebook' | 'twitter' | 'whatsapp') => {
+    const { socialText, quizUrl } = getShareContent()
+    const fullText = `${socialText} ${quizUrl}`
+
+    let shareUrl = ''
+
+    switch (platform) {
+      case 'facebook':
+        // Facebook doesn't support pre-filled text anymore, but we can share the URL
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(quizUrl)}`
+        break
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`
+        break
+      case 'whatsapp':
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(fullText)}`
+        break
+    }
+
+    window.open(shareUrl, '_blank', 'width=600,height=400')
   }
 
   return (
@@ -288,35 +325,83 @@ function StyleProfileContent() {
           )}
         </div>
 
-        {/* Footer CTA */}
+        {/* Share Section */}
         <motion.div
-          className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="mt-12 space-y-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          <button
-            onClick={handleShare}
-            className="btn-primary flex items-center space-x-2"
-          >
-            {shareStatus === 'copied' ? (
-              <>
-                <Check className="w-4 h-4" />
-                <span>Link Copied!</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="w-4 h-4" />
-                <span>Share My Style</span>
-              </>
-            )}
-          </button>
-          <button
-            onClick={() => router.push('/')}
-            className="btn-secondary"
-          >
-            Take the Quiz Again
-          </button>
+          {/* Share Heading */}
+          <div className="text-center">
+            <h3 className="text-lg md:text-xl font-semibold text-primary-900 mb-2">
+              Share Your Style Discovery
+            </h3>
+            <p className="text-sm md:text-base text-primary-600">
+              Let others discover their signature style too!
+            </p>
+          </div>
+
+          {/* Social Share Buttons */}
+          <div className="flex flex-wrap gap-3 justify-center items-center">
+            {/* General Share Button */}
+            <button
+              onClick={handleShare}
+              className="btn-primary flex items-center space-x-2"
+            >
+              {shareStatus === 'copied' ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span>Link Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-4 h-4" />
+                  <span>Share</span>
+                </>
+              )}
+            </button>
+
+            {/* Facebook */}
+            <button
+              onClick={() => handleSocialShare('facebook')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#1877F2] hover:bg-[#166FE5] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+              aria-label="Share on Facebook"
+            >
+              <Facebook className="w-4 h-4" />
+              <span className="hidden sm:inline">Facebook</span>
+            </button>
+
+            {/* Twitter/X */}
+            <button
+              onClick={() => handleSocialShare('twitter')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#000000] hover:bg-[#333333] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+              aria-label="Share on X (Twitter)"
+            >
+              <Twitter className="w-4 h-4" />
+              <span className="hidden sm:inline">X</span>
+            </button>
+
+            {/* WhatsApp */}
+            <button
+              onClick={() => handleSocialShare('whatsapp')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#25D366] hover:bg-[#20BD5A] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+              aria-label="Share on WhatsApp"
+            >
+              <Send className="w-4 h-4" />
+              <span className="hidden sm:inline">WhatsApp</span>
+            </button>
+          </div>
+
+          {/* Quiz Again Button */}
+          <div className="text-center pt-6 border-t border-primary-200">
+            <button
+              onClick={() => router.push('/')}
+              className="btn-secondary"
+            >
+              Take the Quiz Again
+            </button>
+          </div>
         </motion.div>
       </div>
     </div>
