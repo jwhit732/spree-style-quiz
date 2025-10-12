@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Loader2, ArrowLeft, Home, Share2, Check, Facebook, Twitter, Send } from 'lucide-react'
+import { Loader2, ArrowLeft, Home, Share2, Check, Facebook, Instagram, Send } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 interface StyleProfile {
@@ -239,26 +239,28 @@ function StyleProfileContent() {
   }
 
   // Handle social media shares
-  const handleSocialShare = (platform: 'facebook' | 'twitter' | 'whatsapp') => {
+  const handleSocialShare = (platform: 'facebook' | 'instagram' | 'whatsapp') => {
     const { socialText, quizUrl } = getShareContent()
     const fullText = `${socialText} ${quizUrl}`
 
-    let shareUrl = ''
-
     switch (platform) {
       case 'facebook':
-        // Facebook doesn't support pre-filled text anymore, but we can share the URL
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(quizUrl)}`
+        // Facebook doesn't support pre-filled text, just shares the URL
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(quizUrl)}`
+        window.open(facebookUrl, '_blank', 'width=600,height=400')
         break
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`
+      case 'instagram':
+        // Instagram doesn't have a direct web share URL
+        // Copy text to clipboard and guide user to post
+        navigator.clipboard.writeText(fullText).then(() => {
+          alert(`📋 Message copied to clipboard!\n\nNow:\n1. Open Instagram\n2. Create a Story or Post\n3. Paste the message\n4. Share your style! ✨`)
+        })
         break
       case 'whatsapp':
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(fullText)}`
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(fullText)}`
+        window.open(whatsappUrl, '_blank', 'width=600,height=400')
         break
     }
-
-    window.open(shareUrl, '_blank', 'width=600,height=400')
   }
 
   return (
@@ -372,14 +374,14 @@ function StyleProfileContent() {
               <span className="hidden sm:inline">Facebook</span>
             </button>
 
-            {/* Twitter/X */}
+            {/* Instagram */}
             <button
-              onClick={() => handleSocialShare('twitter')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#000000] hover:bg-[#333333] text-white font-medium transition-colors shadow-md hover:shadow-lg"
-              aria-label="Share on X (Twitter)"
+              onClick={() => handleSocialShare('instagram')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-90 text-white font-medium transition-opacity shadow-md hover:shadow-lg"
+              aria-label="Share on Instagram"
             >
-              <Twitter className="w-4 h-4" />
-              <span className="hidden sm:inline">X</span>
+              <Instagram className="w-4 h-4" />
+              <span className="hidden sm:inline">Instagram</span>
             </button>
 
             {/* WhatsApp */}
