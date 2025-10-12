@@ -17,7 +17,8 @@
       "Bash(taskkill:*)",
       "Bash(npm install:*)",
       "Bash(test:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

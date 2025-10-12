@@ -23,6 +23,30 @@ function StyleProfileContent() {
   const [error, setError] = useState<string | null>(null)
   const [userName, setUserName] = useState<string>('')
 
+  // Format text with paragraph breaks after first sentence and every 2-3 sentences
+  const formatTextWithBreaks = (text: string) => {
+    if (!text) return ''
+
+    // Split by periods followed by space or end of string
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text]
+
+    let formatted = ''
+    sentences.forEach((sentence, index) => {
+      formatted += sentence
+
+      // Add break after first sentence
+      if (index === 0) {
+        formatted += '\n\n'
+      }
+      // Add break every 2-3 sentences after that
+      else if (index > 0 && (index % 2 === 0 || index % 3 === 0)) {
+        formatted += '\n\n'
+      }
+    })
+
+    return formatted
+  }
+
   useEffect(() => {
     async function fetchProfile() {
       try {
@@ -160,7 +184,7 @@ function StyleProfileContent() {
               transition={{ delay: 0.1 }}
             >
               <div className="text-primary-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap">
-                {fields.text}
+                {formatTextWithBreaks(fields.text)}
               </div>
             </motion.div>
           )}

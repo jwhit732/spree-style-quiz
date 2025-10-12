@@ -6,6 +6,7 @@ import { QuizResult, UserSubmission } from '@/types/quiz'
 import { archetypeDescriptions } from '@/utils/scoring'
 import { useForm } from 'react-hook-form'
 import { Mail, User } from 'lucide-react'
+import confetti from 'canvas-confetti'
 
 interface ResultsStepProps {
   result: QuizResult
@@ -22,9 +23,51 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
 
-  // Scroll to top when component mounts
+  // Scroll to top and trigger confetti when component mounts
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    // Trigger confetti after a short delay to sync with reveal animation
+    const confettiTimer = setTimeout(() => {
+      // Fire confetti from multiple points for better effect
+      const duration = 2000
+      const animationEnd = Date.now() + duration
+      const defaults = {
+        startVelocity: 30,
+        spread: 360,
+        ticks: 60,
+        zIndex: 0,
+        colors: ['#D4A574', '#C9976D', '#E8C9A0', '#B88A5C'] // Accent colors
+      }
+
+      function randomInRange(min: number, max: number) {
+        return Math.random() * (max - min) + min
+      }
+
+      const interval: any = setInterval(function() {
+        const timeLeft = animationEnd - Date.now()
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval)
+        }
+
+        const particleCount = 50 * (timeLeft / duration)
+
+        // Fire from two different origins
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        })
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        })
+      }, 250)
+    }, 800) // Delay to sync with the style description reveal
+
+    return () => clearTimeout(confettiTimer)
   }, [])
 
   const onSubmit = async (data: FormData) => {
@@ -108,7 +151,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
                 scale: [1, 1.05, 1],
               }}
               transition={{
-                duration: 2,
+                duration: 6,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
