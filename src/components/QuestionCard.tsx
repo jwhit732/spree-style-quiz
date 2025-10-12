@@ -63,9 +63,10 @@ export default function QuestionCard({
             )}
           </div>
         )}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+        {/* Text label hidden per user request */}
+        {/* <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
           <p className="text-white font-medium text-center">{option.text}</p>
-        </div>
+        </div> */}
       </motion.div>
     )
   }
