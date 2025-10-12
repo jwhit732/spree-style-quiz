@@ -6,7 +6,6 @@ import { QuizResult, UserSubmission } from '@/types/quiz'
 import { archetypeDescriptions } from '@/utils/scoring'
 import { useForm } from 'react-hook-form'
 import { Mail, User } from 'lucide-react'
-import confetti from 'canvas-confetti'
 
 interface ResultsStepProps {
   result: QuizResult
@@ -16,6 +15,7 @@ interface ResultsStepProps {
 interface FormData {
   name: string
   email: string
+  consent: boolean
 }
 
 export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
@@ -23,57 +23,38 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
 
-  // Scroll to top and trigger confetti when component mounts
+  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-
-    // Trigger confetti after a short delay to sync with reveal animation
-    const confettiTimer = setTimeout(() => {
-      // Fire confetti from multiple points for better effect
-      const duration = 2000
-      const animationEnd = Date.now() + duration
-      const defaults = {
-        startVelocity: 30,
-        spread: 360,
-        ticks: 60,
-        zIndex: 0,
-        colors: ['#D4A574', '#C9976D', '#E8C9A0', '#B88A5C'] // Accent colors
-      }
-
-      function randomInRange(min: number, max: number) {
-        return Math.random() * (max - min) + min
-      }
-
-      const interval: any = setInterval(function() {
-        const timeLeft = animationEnd - Date.now()
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval)
-        }
-
-        const particleCount = 50 * (timeLeft / duration)
-
-        // Fire from two different origins
-        confetti({
-          ...defaults,
-          particleCount,
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-        })
-        confetti({
-          ...defaults,
-          particleCount,
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-        })
-      }, 250)
-    }, 800) // Delay to sync with the style description reveal
-
-    return () => clearTimeout(confettiTimer)
   }, [])
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
 
     try {
+      // Submit to ActiveCampaign via API
+      const submission: UserSubmission = {
+        name: data.name,
+        email: data.email,
+        result: result,
+        timestamp: new Date().toISOString()
+      }
+
+      const response = await fetch('/api/submit-quiz', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submission)
+      })
+
+      if (!response.ok) {
+        console.error('Failed to submit to ActiveCampaign:', await response.text())
+        // Continue anyway to show results
+      } else {
+        console.log('Successfully submitted to ActiveCampaign')
+      }
+
       // Encode the quiz result data to pass via URL
       const resultData = encodeURIComponent(JSON.stringify({
         name: data.name,
@@ -88,7 +69,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
       // Redirect to style profile page with results
       window.location.href = `/style-profile?data=${resultData}`
     } catch (error) {
-      console.error('Error preparing redirect:', error)
+      console.error('Error submitting quiz:', error)
       // Fallback: still redirect without full data
       const params = new URLSearchParams()
       params.append('primary', result.primary)
@@ -256,7 +237,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
                 Email
               </label>
               <input
-                {...register('email', { 
+                {...register('email', {
                   required: 'Email is required',
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -271,6 +252,23 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
                 <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
               )}
             </div>
+
+            <div className="flex items-start space-x-3">
+              <input
+                {...register('consent', {
+                  required: 'Please confirm you\'d like to join our style community'
+                })}
+                type="checkbox"
+                id="consent"
+                className="mt-1 w-4 h-4 md:w-5 md:h-5 rounded border-primary-300 text-accent-600 focus:ring-accent-500 focus:ring-offset-0 cursor-pointer"
+              />
+              <label htmlFor="consent" className="text-xs md:text-sm text-primary-700 leading-relaxed cursor-pointer">
+                I'd love to join the Spree with Me community and receive my personalized style profile, along with occasional style inspiration, fashion tips, and updates that celebrate authentic self-expression.
+              </label>
+            </div>
+            {errors.consent && (
+              <p className="text-red-600 text-sm mt-1">{errors.consent.message}</p>
+            )}
 
             <button
               type="submit"

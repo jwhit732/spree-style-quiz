@@ -40,6 +40,9 @@ export async function POST(request: NextRequest) {
 
     let activeCampaignSuccess = false
 
+    // Generate the style slug (e.g., "natural-romantic-bold")
+    const styleSlug = generateArchetypeCombinationId(submission.result)
+
     // Prepare data for ActiveCampaign
     const activeCampaignData = {
       contact: {
@@ -64,8 +67,8 @@ export async function POST(request: NextRequest) {
             value: new Date().toISOString().split('T')[0] // YYYY-MM-DD format
           },
           {
-            field: process.env.AC_FIELD_ARCHETYPE_COMBO || '5',
-            value: generateArchetypeCombinationId(submission.result)
+            field: process.env.AC_FIELD_STYLE_SLUG || '5',
+            value: styleSlug
           }
         ]
       }
@@ -98,6 +101,36 @@ export async function POST(request: NextRequest) {
         contactId = contactData.contact?.id
         console.log('✅ Successfully sent to ActiveCampaign, contact ID:', contactId)
         activeCampaignSuccess = true
+
+        // Subscribe to list if list ID is specified
+        if (contactId && process.env.AC_LIST_ID) {
+          try {
+            console.log(`🔄 Adding contact to list ${process.env.AC_LIST_ID}...`)
+            const listResponse = await fetch(`${process.env.AC_BASE_URL}/api/3/contactLists`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Api-Token': process.env.AC_API_KEY || ''
+              },
+              body: JSON.stringify({
+                contactList: {
+                  list: process.env.AC_LIST_ID,
+                  contact: contactId,
+                  status: 1 // 1 = subscribed
+                }
+              })
+            })
+
+            if (listResponse.ok) {
+              console.log('✅ Contact added to list successfully')
+            } else {
+              const listError = await listResponse.text()
+              console.error('❌ Failed to add contact to list:', listError)
+            }
+          } catch (listError) {
+            console.error('❌ Error adding contact to list:', listError)
+          }
+        }
       } else {
         const errorData = await acResponse.text()
         console.error('❌ ActiveCampaign API error:', {

@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Loader2, ArrowLeft, Home } from 'lucide-react'
+import confetti from 'canvas-confetti'
 
 interface StyleProfile {
   id: string
@@ -103,6 +104,53 @@ function StyleProfileContent() {
     fetchProfile()
   }, [searchParams])
 
+  // Trigger confetti when profile loads successfully
+  useEffect(() => {
+    if (!loading && profile && !error) {
+      // Trigger confetti after a short delay to sync with reveal animation
+      const confettiTimer = setTimeout(() => {
+        // Fire confetti from multiple points for better effect
+        const duration = 2000
+        const animationEnd = Date.now() + duration
+        const defaults = {
+          startVelocity: 30,
+          spread: 360,
+          ticks: 60,
+          zIndex: 0,
+          colors: ['#D4A574', '#C9976D', '#E8C9A0', '#B88A5C'] // Accent colors
+        }
+
+        function randomInRange(min: number, max: number) {
+          return Math.random() * (max - min) + min
+        }
+
+        const interval: any = setInterval(function() {
+          const timeLeft = animationEnd - Date.now()
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval)
+          }
+
+          const particleCount = 50 * (timeLeft / duration)
+
+          // Fire from two different origins
+          confetti({
+            ...defaults,
+            particleCount,
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+          })
+          confetti({
+            ...defaults,
+            particleCount,
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+          })
+        }, 250)
+      }, 500) // Delay to sync with the page reveal
+
+      return () => clearTimeout(confettiTimer)
+    }
+  }, [loading, profile, error])
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 flex items-center justify-center">
@@ -164,11 +212,11 @@ function StyleProfileContent() {
           </button>
 
           {userName && (
-            <h1 className="text-3xl md:text-5xl font-bold text-primary-900 mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-primary-900 mb-2">
               Welcome, {userName}!
             </h1>
           )}
-          <h2 className="text-2xl md:text-4xl font-bold text-accent-600 capitalize">
+          <h2 className="text-xl md:text-2xl font-bold text-accent-600 capitalize">
             Your {fields.slug?.replace(/-/g, ' · ')} Style Profile
           </h2>
         </motion.div>
@@ -183,7 +231,7 @@ function StyleProfileContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
             >
-              <div className="text-primary-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap">
+              <div className="text-primary-700 text-sm md:text-base leading-relaxed whitespace-pre-wrap">
                 {formatTextWithBreaks(fields.text)}
               </div>
             </motion.div>
