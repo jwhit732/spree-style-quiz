@@ -48,29 +48,13 @@ export async function POST(request: NextRequest) {
       contact: {
         email: submission.email,
         firstName: submission.name,
-        // Custom fields for quiz results
-        fieldValues: [
+        // Custom fields for quiz results - only include if field IDs are configured
+        fieldValues: process.env.AC_FIELD_ARCHETYPE_COMBO ? [
           {
-            field: process.env.AC_FIELD_PRIMARY_ARCHETYPE || '1', // You'll get this ID from ActiveCampaign
-            value: submission.result.primary
-          },
-          {
-            field: process.env.AC_FIELD_SECONDARY_ARCHETYPE || '2',
-            value: submission.result.secondary || ''
-          },
-          {
-            field: process.env.AC_FIELD_QUIZ_RESULT || '3',
-            value: submission.result.description
-          },
-          {
-            field: process.env.AC_FIELD_QUIZ_DATE || '4',
-            value: new Date().toISOString().split('T')[0] // YYYY-MM-DD format
-          },
-          {
-            field: process.env.AC_FIELD_STYLE_SLUG || '5',
+            field: process.env.AC_FIELD_ARCHETYPE_COMBO, // Field ID 50 - stores the style slug
             value: styleSlug
           }
-        ]
+        ] : []
       }
     }
 
@@ -99,38 +83,12 @@ export async function POST(request: NextRequest) {
       if (acResponse.ok) {
         const contactData = await acResponse.json()
         contactId = contactData.contact?.id
-        console.log('✅ Successfully sent to ActiveCampaign, contact ID:', contactId)
+        console.log('✅ Successfully saved to ActiveCampaign!')
+        console.log('   - Contact ID:', contactId)
+        console.log('   - Email:', submission.email)
+        console.log('   - Name:', submission.name)
+        console.log('   - Style Slug:', styleSlug)
         activeCampaignSuccess = true
-
-        // Subscribe to list if list ID is specified
-        if (contactId && process.env.AC_LIST_ID) {
-          try {
-            console.log(`🔄 Adding contact to list ${process.env.AC_LIST_ID}...`)
-            const listResponse = await fetch(`${process.env.AC_BASE_URL}/api/3/contactLists`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Api-Token': process.env.AC_API_KEY || ''
-              },
-              body: JSON.stringify({
-                contactList: {
-                  list: process.env.AC_LIST_ID,
-                  contact: contactId,
-                  status: 1 // 1 = subscribed
-                }
-              })
-            })
-
-            if (listResponse.ok) {
-              console.log('✅ Contact added to list successfully')
-            } else {
-              const listError = await listResponse.text()
-              console.error('❌ Failed to add contact to list:', listError)
-            }
-          } catch (listError) {
-            console.error('❌ Error adding contact to list:', listError)
-          }
-        }
       } else {
         const errorData = await acResponse.text()
         console.error('❌ ActiveCampaign API error:', {
