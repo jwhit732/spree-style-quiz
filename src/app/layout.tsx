@@ -5,10 +5,26 @@ export const metadata: Metadata = {
   title: 'Discover Your Signature Style | Spree with Me',
   description: 'This short quiz helps uncover your authentic style – based on what you like, how you see yourself, and how you want to be seen.',
   keywords: 'style quiz, personal style, fashion archetype, style personality',
+  metadataBase: new URL('https://spreewithme.com'),
   openGraph: {
     title: 'Discover Your Signature Style',
-    description: 'Take our quiz to discover your unique style personality',
+    description: 'Take the quick style quiz and get your signature style.',
     type: 'website',
+    url: 'https://spreewithme.com/style-quiz',
+    images: [
+      {
+        url: 'https://images.squarespace-cdn.com/content/v1/5c3079f9f407b4ab43249324/b7717dac-2cf1-4f0a-8707-beebcd872331/Personal+Stylists+Australia+Spree+with+Me.jpg?format=2500w',
+        width: 1200,
+        height: 630,
+        alt: 'Discover Your Style Profile',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Discover Your Signature Style',
+    description: 'Take the quick style quiz and get your signature style.',
+    images: ['https://images.squarespace-cdn.com/content/v1/5c3079f9f407b4ab43249324/b7717dac-2cf1-4f0a-8707-beebcd872331/Personal+Stylists+Australia+Spree+with+Me.jpg?format=2500w'],
   },
 }
 

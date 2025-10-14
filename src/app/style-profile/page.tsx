@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Loader2, ArrowLeft, Home, Share2, Check, Facebook, Send } from 'lucide-react'
+import { Loader2, ArrowLeft, Home, Share2, Check, Facebook, Send, Mail, MessageSquare, Linkedin } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 interface StyleProfile {
@@ -211,7 +211,7 @@ function StyleProfileContent() {
   const getShareContent = () => {
     const styleDescription = fields.slug?.replace(/-/g, ' · ') || 'my style'
     // Always share the quiz homepage, not the profile page
-    const quizUrl = 'https://spreewithme.com.au/style-quiz'
+    const quizUrl = 'https://spreewithme.com/style-quiz'
 
     return {
       styleDescription,
@@ -227,18 +227,22 @@ function StyleProfileContent() {
 
     const shareData = {
       title: 'Discover Your Signature Style',
-      text: `${socialText} ${quizUrl}`,
+      text: socialText,
       url: quizUrl
     }
 
     try {
-      // Check if Web Share API is available
-      if (navigator.share) {
-        // Try to share
+      // Check if Web Share API is available and can share this data
+      if (navigator.canShare && navigator.canShare(shareData)) {
+        // Use native share
         await navigator.share(shareData)
+      } else if (navigator.share) {
+        // Fallback: try with just URL if full shareData not supported
+        await navigator.share({ url: quizUrl })
       } else {
         // Fallback to clipboard for desktop browsers
-        await navigator.clipboard.writeText(quizUrl)
+        const textToCopy = `${socialText} ${quizUrl}`
+        await navigator.clipboard.writeText(textToCopy)
         setShareStatus('copied')
         setTimeout(() => setShareStatus('idle'), 2000)
       }
@@ -250,19 +254,26 @@ function StyleProfileContent() {
 
       // If share fails, try clipboard as fallback
       try {
-        await navigator.clipboard.writeText(quizUrl)
+        const textToCopy = `${socialText} ${quizUrl}`
+        await navigator.clipboard.writeText(textToCopy)
         setShareStatus('copied')
         setTimeout(() => setShareStatus('idle'), 2000)
       } catch (clipboardErr) {
         console.error('Error copying to clipboard:', clipboardErr)
-        alert('Unable to share. Please copy this link manually: ' + quizUrl)
+        // Final fallback: show a prompt with the URL
+        const fallbackText = `${socialText} ${quizUrl}`
+        if (window.prompt) {
+          window.prompt('Copy this link to share:', fallbackText)
+        } else {
+          alert('Share link: ' + fallbackText)
+        }
       }
     }
   }
 
   // Handle social media shares
-  const handleSocialShare = (platform: 'facebook' | 'pinterest' | 'whatsapp') => {
-    const { socialText, quizUrl } = getShareContent()
+  const handleSocialShare = (platform: 'facebook' | 'pinterest' | 'whatsapp' | 'linkedin' | 'twitter' | 'email' | 'sms') => {
+    const { styleDescription, socialText, quizUrl } = getShareContent()
     const fullText = `${socialText} ${quizUrl}`
 
     switch (platform) {
@@ -273,12 +284,40 @@ function StyleProfileContent() {
         break
       case 'pinterest':
         // Pinterest supports pre-filled description and URL
-        const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(quizUrl)}&description=${encodeURIComponent(fullText)}`
+        const imageUrl = 'https://images.squarespace-cdn.com/content/v1/5c3079f9f407b4ab43249324/b7717dac-2cf1-4f0a-8707-beebcd872331/Personal+Stylists+Australia+Spree+with+Me.jpg?format=2500w'
+        const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(quizUrl)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(fullText)}`
         window.open(pinterestUrl, '_blank', 'width=750,height=550')
         break
       case 'whatsapp':
         const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(fullText)}`
         window.open(whatsappUrl, '_blank', 'width=600,height=400')
+        break
+      case 'linkedin':
+        const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(quizUrl)}`
+        window.open(linkedinUrl, '_blank', 'width=600,height=600')
+        break
+      case 'twitter':
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(socialText)}&url=${encodeURIComponent(quizUrl)}`
+        window.open(twitterUrl, '_blank', 'width=550,height=420')
+        break
+      case 'email':
+        const emailSubject = 'Discover Your Signature Style'
+        // Include the full style profile in the email
+        let emailBody = `${socialText}\n\n`
+        emailBody += `Your Style Profile: ${styleDescription.toUpperCase()}\n\n`
+
+        // Add the profile description if available
+        if (fields.text) {
+          emailBody += `${fields.text}\n\n`
+        }
+
+        emailBody += `Take the quiz yourself at: ${quizUrl}`
+
+        window.location.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+        break
+      case 'sms':
+        const smsBody = `${socialText} ${quizUrl}`
+        window.location.href = `sms:?&body=${encodeURIComponent(smsBody)}`
         break
     }
   }
@@ -394,6 +433,28 @@ function StyleProfileContent() {
               <span className="hidden sm:inline">Facebook</span>
             </button>
 
+            {/* LinkedIn */}
+            <button
+              onClick={() => handleSocialShare('linkedin')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#0A66C2] hover:bg-[#004182] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+              aria-label="Share on LinkedIn"
+            >
+              <Linkedin className="w-4 h-4" />
+              <span className="hidden sm:inline">LinkedIn</span>
+            </button>
+
+            {/* X/Twitter */}
+            <button
+              onClick={() => handleSocialShare('twitter')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#000000] hover:bg-[#333333] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+              aria-label="Share on X (Twitter)"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              <span className="hidden sm:inline">X</span>
+            </button>
+
             {/* Pinterest */}
             <button
               onClick={() => handleSocialShare('pinterest')}
@@ -414,6 +475,26 @@ function StyleProfileContent() {
             >
               <Send className="w-4 h-4" />
               <span className="hidden sm:inline">WhatsApp</span>
+            </button>
+
+            {/* Email */}
+            <button
+              onClick={() => handleSocialShare('email')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors shadow-md hover:shadow-lg"
+              aria-label="Share via Email"
+            >
+              <Mail className="w-4 h-4" />
+              <span className="hidden sm:inline">Email</span>
+            </button>
+
+            {/* SMS */}
+            <button
+              onClick={() => handleSocialShare('sms')}
+              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-accent-600 hover:bg-accent-700 text-white font-medium transition-colors shadow-md hover:shadow-lg"
+              aria-label="Share via SMS"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span className="hidden sm:inline">SMS</span>
             </button>
           </div>
 
