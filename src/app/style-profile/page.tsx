@@ -173,7 +173,7 @@ function StyleProfileContent() {
           animate={{ opacity: 1 }}
         >
           <Loader2 className="w-12 h-12 text-accent-600 animate-spin mx-auto mb-4" />
-          <p className="text-lg text-primary-700">Loading your personalized style profile...</p>
+          <p className="text-lg text-primary-700">Loading your personalised style profile...</p>
         </motion.div>
       </div>
     )
@@ -441,7 +441,7 @@ function LoadingFallback() {
         animate={{ opacity: 1 }}
       >
         <Loader2 className="w-12 h-12 text-accent-600 animate-spin mx-auto mb-4" />
-        <p className="text-lg text-primary-700">Loading your personalized style profile...</p>
+        <p className="text-lg text-primary-700">Loading your personalised style profile...</p>
       </motion.div>
     </div>
   )

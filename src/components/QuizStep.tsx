@@ -116,34 +116,70 @@ export default function QuizStep({
       </div>
 
       {/* Options Grid */}
-      <div className={`mb-4 md:mb-12 ${
-        question.type === 'image' 
-          ? 'grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6'
-          : question.type === 'multiple' 
-          ? 'grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4'
-          : 'space-y-2 md:space-y-4'
-      }`}>
-        {question.options.map((option, index) => (
-          <motion.div
-            key={option.id}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 0.3, 
-              delay: index * 0.08,
-              ease: [0.4, 0, 0.2, 1]
-            }}
-          >
-            <QuestionCard
-              option={option}
-              isSelected={isOptionSelected(option.id)}
-              onSelect={handleOptionSelect}
-              type={question.type}
-              disabled={question.type === 'multiple' && isMaxSelectionsReached() && !isOptionSelected(option.id)}
-            />
-          </motion.div>
-        ))}
-      </div>
+      {question.sections ? (
+        // Render sections if they exist
+        <div className="mb-4 md:mb-12 space-y-6 md:space-y-8">
+          {question.sections.map((section, sectionIndex) => (
+            <div key={section.id} className="space-y-2 md:space-y-3">
+              <h3 className="text-primary-800 font-semibold text-sm md:text-base mb-2 md:mb-3">
+                {section.title}
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+                {section.options.map((option, index) => (
+                  <motion.div
+                    key={option.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      delay: (sectionIndex * section.options.length + index) * 0.05,
+                      ease: [0.4, 0, 0.2, 1]
+                    }}
+                  >
+                    <QuestionCard
+                      option={option}
+                      isSelected={isOptionSelected(option.id)}
+                      onSelect={handleOptionSelect}
+                      type={question.type}
+                      disabled={question.type === 'multiple' && isMaxSelectionsReached() && !isOptionSelected(option.id)}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        // Render options normally if no sections
+        <div className={`mb-4 md:mb-12 ${
+          question.type === 'image'
+            ? 'grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6'
+            : question.type === 'multiple'
+            ? 'grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4'
+            : 'space-y-2 md:space-y-4'
+        }`}>
+          {question.options.map((option, index) => (
+            <motion.div
+              key={option.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.3,
+                delay: index * 0.08,
+                ease: [0.4, 0, 0.2, 1]
+              }}
+            >
+              <QuestionCard
+                option={option}
+                isSelected={isOptionSelected(option.id)}
+                onSelect={handleOptionSelect}
+                type={question.type}
+                disabled={question.type === 'multiple' && isMaxSelectionsReached() && !isOptionSelected(option.id)}
+              />
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Navigation Buttons */}
       <div className="flex justify-between items-center gap-3">

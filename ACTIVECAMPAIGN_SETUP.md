@@ -9,7 +9,7 @@ When a user completes the quiz and enters their email, the system will:
 2. Add them to a specified list (optional)
 3. Set custom fields with their style results
 4. Add tags based on their primary and secondary style archetypes
-5. Redirect them to their personalized style profile page
+5. Redirect them to their personalised style profile page
 
 ## Environment Variables Required
 

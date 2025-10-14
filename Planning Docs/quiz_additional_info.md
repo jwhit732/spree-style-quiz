@@ -100,7 +100,7 @@ I'll now expand your code into a true full multi-step quiz with:
           <label><input type="checkbox" name="adjectives" value="Romantic"> Soft pastels or even something shiny</label>
           <label><input type="checkbox" name="adjectives" value="Classic"> Crisp neutrals like black and white</label>
           <label><input type="checkbox" name="adjectives" value="Bold"> Anything that’s bright or vibrant — ideally block colour</label>
-          <label><input type="checkbox" name="adjectives" value="Natural"> Warm, natural colours like olive, rust, or tan</label>
+          <label><input type="checkbox" name="adjectives" value="Natural"> Natural colours like brown, olive, rust, or tan</label>
           <label><input type="checkbox" name="adjectives" value="Creative"> Colours on the same tonal palette, or expressed in prints and patterns</label>
         </div>
         <button type="button" onclick="prevStep()">Back</button>

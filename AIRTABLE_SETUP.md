@@ -71,7 +71,7 @@ Create records for each possible combination of archetypes. For example:
 1. Make sure your `.env.local` file is set up correctly
 2. Restart your development server: `npm run dev`
 3. Complete the quiz and submit your email
-4. You should be redirected to your personalized style profile page
+4. You should be redirected to your personalised style profile page
 
 ## Troubleshooting
 

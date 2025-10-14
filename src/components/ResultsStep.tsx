@@ -21,7 +21,11 @@ interface FormData {
 export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    defaultValues: {
+      consent: true
+    }
+  })
 
   // Scroll to top when component mounts - force instant scroll for mobile reliability
   useEffect(() => {
@@ -112,7 +116,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
 
   return (
     <motion.div
-      className="min-h-screen bg-gradient-to-br from-accent-50 to-primary-50 py-6 md:py-12 px-4 md:px-6"
+      className="bg-gradient-to-br from-accent-50 to-primary-50 py-6 md:py-12 px-4 md:px-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -126,7 +130,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-xl md:text-3xl font-bold text-primary-900 mb-3 md:mb-4">
-            Thank You! Your signature style is defined as:
+            Congratulations! Your signature style is defined as:
           </h1>
           <motion.div
             className="relative inline-block"
@@ -207,20 +211,31 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           )}
         </div>
 
+        {/* Introductory Text */}
+        <motion.div
+          className="text-center mb-6 md:mb-8 max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          <p className="text-primary-700 text-sm md:text-base leading-relaxed">
+            Style is deeply personal, and there are over 155 possible combinations! Articulating and understanding what your signature style is, is a great first step to embracing your style, or knowing how to update it authentically.
+          </p>
+        </motion.div>
+
         {/* Email Capture Form */}
         <motion.div
           className="bg-white rounded-2xl p-4 md:p-8 lg:p-12 shadow-xl max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
         >
           <div className="text-center mb-6 md:mb-8">
             <h3 className="text-lg md:text-xl font-bold text-primary-900 mb-3 md:mb-4">
-              Get A Complete Description of Your Signature Style
+              Get Your Complete Description of Your Signature Style
             </h3>
             <p className="text-primary-700 text-sm md:text-base">
-              To understand what that means exactly, enter your email to receive your full description of your signature style with specific advice
-              detailed recommendations, and exclusive styling advice.
+              Understand what your signature style means exactly. Enter your email to receive your full description of your signature style with specific advice detailed recommendations, and unique tips to help you lean into your individual style.
             </p>
           </div>
 
@@ -266,14 +281,14 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
             <div className="flex items-start space-x-3">
               <input
                 {...register('consent', {
-                  required: 'Please confirm you\'d like to join our style community'
+                  required: 'I\'d like to join the Spree With Me style community'
                 })}
                 type="checkbox"
                 id="consent"
                 className="mt-1 w-4 h-4 md:w-5 md:h-5 rounded border-primary-300 text-accent-600 focus:ring-accent-500 focus:ring-offset-0 cursor-pointer"
               />
               <label htmlFor="consent" className="text-xs md:text-sm text-primary-700 leading-relaxed cursor-pointer">
-                I'd love to join the Spree with Me community and receive my personalized style profile, along with occasional style inspiration, fashion tips, and updates that celebrate authentic self-expression.
+                Yes! I'd love to join the Spree with Me community and receive my personalised style profile end description, along with occasional style inspiration, fashion tips, and updates that celebrate authentic self-expression.
               </label>
             </div>
             {errors.consent && (
@@ -299,19 +314,6 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
               Spree with Me and the Style Squad are here to support you. We’re a locally owned Australian company. By receiving your exclusive and unique signature style profile, you will also join us to receive occasional fashion and style news, and other stylish updates with and occasional news from us. Your details will remain private.
             </p>
           </form>
-        </motion.div>
-
-        {/* Additional Info */}
-        <motion.div
-          className="text-center mt-6 md:mt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-        >
-          <p className="text-primary-600 max-w-2xl mx-auto text-xs md:text-base">
-            Style is deeply personal, and there are 155 possible combinations. 
-            This is a great first step to articulating yours.
-          </p>
         </motion.div>
       </div>
     </motion.div>

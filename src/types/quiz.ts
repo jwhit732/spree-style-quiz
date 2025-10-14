@@ -25,6 +25,12 @@ export interface QuizResult {
   description: string
 }
 
+export interface QuestionSection {
+  id: string
+  title: string
+  options: QuestionOption[]
+}
+
 export interface Question {
   id: string
   title: string
@@ -32,6 +38,7 @@ export interface Question {
   type: 'single' | 'multiple' | 'image'
   maxSelections?: number
   options: QuestionOption[]
+  sections?: QuestionSection[]
 }
 
 export interface QuestionOption {

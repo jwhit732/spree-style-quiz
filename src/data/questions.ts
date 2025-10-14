@@ -60,12 +60,12 @@ export const questions: Question[] = [
       },
       {
         id: 'd',
-        text: 'Anything that is bright or vibrant — ideally block colour',
+        text: 'Anything that is bright or vibrant, ideally block colour',
         archetype: 'bold',
       },
       {
         id: 'e',
-        text: 'Warm, natural colours like olive, rust, or tan',
+        text: 'Natural colours like brown, olive, rust, or tan',
         archetype: 'natural',
       },
       {
@@ -87,13 +87,13 @@ export const questions: Question[] = [
       },
       {
         id: 'b',
-        text: 'Lace, velvet, embroidery, or interesting layers',
+        text: 'Soft, delicate fabrics (silk, chiffon, cashmere',
         archetype: 'romantic',
       },
       {
         id: 'c',
-        text: 'Anything that is soft or feels lovely on the skin',
-        archetype: 'romantic',
+        text: 'Breathable fibres, nothing polyester (linen, cotton, silk)',
+        archetype: 'natural',
       },
       {
         id: 'd',
@@ -152,34 +152,48 @@ export const questions: Question[] = [
   {
     id: 'personality',
     title: 'Which words feel most like you?',
-    subtitle: 'Choose up to 6 words total',
+    subtitle: 'Choose up to 6 total across all 3 sections',
     type: 'multiple',
     maxSelections: 6,
-    options: [
-      // Column 1: Personality traits
-      { id: 'a1', text: 'Organised', archetype: 'classic' },
-      { id: 'a2', text: 'Easygoing', archetype: 'natural' },
-      { id: 'a3', text: 'Feminine', archetype: 'romantic' },
-      { id: 'a4', text: 'Bold', archetype: 'bold' },
-      { id: 'a5', text: 'Quirky', archetype: 'creative' },
-      { id: 'a6', text: 'Defiant', archetype: 'rebellious' },
-      
-      // Column 2: How you want to come across
-      { id: 'b1', text: 'Daring', archetype: 'bold' },
-      { id: 'b2', text: 'Approachable', archetype: 'natural' },
-      { id: 'b3', text: 'Powerful', archetype: 'bold' },
-      { id: 'b4', text: 'Warm', archetype: 'romantic' },
-      { id: 'b5', text: 'Sensible', archetype: 'classic' },
-      { id: 'b6', text: 'Innovative', archetype: 'creative' },
-      
-      // Column 3: What matters most in style
-      { id: 'c1', text: 'Breaking the rules', archetype: 'rebellious' },
-      { id: 'c2', text: 'Comfort', archetype: 'natural' },
-      { id: 'c3', text: 'Neatness', archetype: 'classic' },
-      { id: 'c4', text: 'Softness', archetype: 'romantic' },
-      { id: 'c5', text: 'Individuality', archetype: 'creative' },
-      { id: 'c6', text: 'Making a statement', archetype: 'bold' },
-    ],
+    options: [],
+    sections: [
+      {
+        id: 'a',
+        title: 'a) Personality',
+        options: [
+          { id: 'a1', text: 'Organised', archetype: 'classic' },
+          { id: 'a2', text: 'Easygoing', archetype: 'natural' },
+          { id: 'a3', text: 'Feminine', archetype: 'romantic' },
+          { id: 'a4', text: 'Bold', archetype: 'bold' },
+          { id: 'a5', text: 'Quirky', archetype: 'creative' },
+          { id: 'a6', text: 'Defiant', archetype: 'rebellious' },
+        ]
+      },
+      {
+        id: 'b',
+        title: 'b) How you want to come across',
+        options: [
+          { id: 'b1', text: 'Daring', archetype: 'bold' },
+          { id: 'b2', text: 'Approachable', archetype: 'natural' },
+          { id: 'b3', text: 'Powerful', archetype: 'bold' },
+          { id: 'b4', text: 'Warm', archetype: 'romantic' },
+          { id: 'b5', text: 'Sensible', archetype: 'classic' },
+          { id: 'b6', text: 'Innovative', archetype: 'creative' },
+        ]
+      },
+      {
+        id: 'c',
+        title: 'c) What matters most in your style',
+        options: [
+          { id: 'c1', text: 'Breaking the rules', archetype: 'rebellious' },
+          { id: 'c2', text: 'Comfort', archetype: 'natural' },
+          { id: 'c3', text: 'Neatness', archetype: 'classic' },
+          { id: 'c4', text: 'Softness', archetype: 'romantic' },
+          { id: 'c5', text: 'Individuality', archetype: 'creative' },
+          { id: 'c6', text: 'Making a statement', archetype: 'bold' },
+        ]
+      }
+    ]
   },
   {
     id: 'outfits',

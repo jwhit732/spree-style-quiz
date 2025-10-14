@@ -89,7 +89,7 @@ export default function QuizContainer() {
     const archetypeImages = questions.find(q => q.type === 'image')?.options || []
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 py-6 md:py-8 px-6 md:px-8">
+      <div className="bg-gradient-to-br from-primary-50 via-white to-accent-50 py-6 md:py-8 px-6 md:px-8">
         <motion.div 
           className="max-w-4xl mx-auto text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -146,14 +146,16 @@ export default function QuizContainer() {
 
           <div className="max-w-2xl mx-auto space-y-5 md:space-y-6">
             <p className="text-primary-700 text-base leading-relaxed">
-              This short quiz helps uncover your authentic style – based on what you like, 
-              how you see yourself, and how you want to be seen.
+              This short quiz is a great first step to articulating your signature style. Expect to uncover your authentic style - based on what you like, how you see yourself, and how you want to be seen.
             </p>
-            <p className="text-primary-600 text-sm leading-relaxed">
-              Choose what feels most like you. Don't overthink it – just choose what feels right.
+            <p className="text-primary-700 text-base leading-relaxed">
+              Style is deeply personal, and there are over 155 possible combination outcomes!
             </p>
-            <p className="text-primary-500 text-xs leading-relaxed">
-              Style is deeply personal, and there are 155 possible combinations. Read more in-depth information about your style. This is a great first step to articulating yours.
+            <p className="text-primary-700 text-sm leading-relaxed">
+              At the end of this quiz, you'll receive your signature style defined, a free in-depth description of what that means, and unique tips to help you to lean into your unique style.
+            </p>
+            <p className="text-primary-700 text-sm leading-relaxed">
+              Choose what feels most like you. Don't overthink it - just choose what feels right.
             </p>
           </div>
 
@@ -180,7 +182,7 @@ export default function QuizContainer() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 py-2 md:py-6">
+    <div className="bg-gradient-to-br from-primary-50 via-white to-accent-50 py-2 md:py-6 min-h-full">
       {/* Progress Bar Only */}
       <div className="max-w-4xl mx-auto px-4 md:px-6 mb-3 md:mb-8">
         <ProgressBar 

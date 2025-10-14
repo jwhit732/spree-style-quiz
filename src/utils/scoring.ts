@@ -34,7 +34,7 @@ export function calculateQuizResult(answers: Record<string, string | string[]>):
     grooming: 3,
     personality: 1, // Each selection worth 1 point
     outfits: 3,
-    vibes: 4 // Highest weight for the visual choice
+    vibes: 3 // Highest weight for the visual choice
   }
 
   Object.entries(answers).forEach(([questionId, answer]) => {
