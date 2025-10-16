@@ -21,6 +21,8 @@ export default function QuizContainer() {
   const isLastStep = quizState.currentStep === questions.length - 1
 
   const handleAnswerChange = (value: string | string[]) => {
+    if (!currentQuestion) return
+
     setQuizState(prev => ({
       ...prev,
       answers: {
@@ -54,14 +56,16 @@ export default function QuizContainer() {
   }
 
   const canProceed = () => {
+    if (!currentQuestion) return false
+
     const currentAnswer = quizState.answers[currentQuestion.id]
-    
+
     if (!currentAnswer) return false
-    
+
     if (Array.isArray(currentAnswer)) {
       return currentAnswer.length > 0
     }
-    
+
     return true
   }
 
@@ -181,12 +185,26 @@ export default function QuizContainer() {
     )
   }
 
+  // Safety check - if no current question, show error or redirect
+  if (!currentQuestion) {
+    return (
+      <div className="bg-gradient-to-br from-primary-50 via-white to-accent-50 py-8 px-4 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-primary-700 mb-4">Something went wrong with the quiz.</p>
+          <button onClick={resetQuiz} className="btn-primary">
+            Restart Quiz
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-gradient-to-br from-primary-50 via-white to-accent-50 py-2 md:py-6 min-h-full">
       {/* Progress Bar Only */}
       <div className="max-w-4xl mx-auto px-4 md:px-6 mb-3 md:mb-8">
-        <ProgressBar 
-          current={quizState.currentStep + 1} 
+        <ProgressBar
+          current={quizState.currentStep + 1}
           total={questions.length}
           className="max-w-md mx-auto"
         />

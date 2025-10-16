@@ -119,10 +119,41 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Add contact to list if contact was created successfully
+    if (activeCampaignSuccess && contactId) {
+      console.log('📋 Adding contact to list ID 12...')
+
+      try {
+        const listResponse = await fetch(`${process.env.AC_BASE_URL}/api/3/contactLists`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Api-Token': process.env.AC_API_KEY || ''
+          },
+          body: JSON.stringify({
+            contactList: {
+              list: 12,
+              contact: contactId,
+              status: 1 // 1 = active, 2 = unsubscribed
+            }
+          })
+        })
+
+        if (listResponse.ok) {
+          console.log('✅ Successfully added contact to list 12')
+        } else {
+          const listError = await listResponse.text()
+          console.error('❌ Failed to add contact to list:', listError)
+        }
+      } catch (listError) {
+        console.error('Error adding contact to list:', listError)
+      }
+    }
+
     // Add tags if contact was created successfully
     if (activeCampaignSuccess && contactId && tags.length > 0) {
       console.log('🏷️ Adding tags to contact:', tags)
-      
+
       for (const tagName of tags) {
         try {
           // First, create or get the tag
@@ -151,7 +182,7 @@ export async function POST(request: NextRequest) {
                 'Api-Token': process.env.AC_API_KEY || ''
               }
             })
-            
+
             if (existingTagResponse.ok) {
               const existingTagData = await existingTagResponse.json()
               tagId = existingTagData.tags?.[0]?.id
@@ -173,7 +204,7 @@ export async function POST(request: NextRequest) {
                 }
               })
             })
-            
+
             if (contactTagResponse.ok) {
               console.log(`✅ Added tag "${tagName}" to contact`)
             } else {

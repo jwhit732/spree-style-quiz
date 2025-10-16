@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Loader2, ArrowLeft, Home, Share2, Check, Facebook, Send, Mail, MessageSquare, Linkedin } from 'lucide-react'
+import { Loader2, ArrowLeft, Home, Facebook, Send, Mail, MessageSquare, Copy, Check } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 interface StyleProfile {
@@ -23,7 +23,7 @@ function StyleProfileContent() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [userName, setUserName] = useState<string>('')
-  const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle')
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied'>('idle')
 
   // Format text with paragraph breaks after first sentence and every 2-3 sentences
   const formatTextWithBreaks = (text: string) => {
@@ -221,58 +221,8 @@ function StyleProfileContent() {
     }
   }
 
-  // Handle native share functionality
-  const handleShare = async () => {
-    const { styleDescription, socialText, quizUrl } = getShareContent()
-
-    const shareData = {
-      title: 'Discover Your Signature Style',
-      text: socialText,
-      url: quizUrl
-    }
-
-    try {
-      // Check if Web Share API is available and can share this data
-      if (navigator.canShare && navigator.canShare(shareData)) {
-        // Use native share
-        await navigator.share(shareData)
-      } else if (navigator.share) {
-        // Fallback: try with just URL if full shareData not supported
-        await navigator.share({ url: quizUrl })
-      } else {
-        // Fallback to clipboard for desktop browsers
-        const textToCopy = `${socialText} ${quizUrl}`
-        await navigator.clipboard.writeText(textToCopy)
-        setShareStatus('copied')
-        setTimeout(() => setShareStatus('idle'), 2000)
-      }
-    } catch (err) {
-      // If user cancels share dialog, silently ignore
-      if (err instanceof Error && err.name === 'AbortError') {
-        return
-      }
-
-      // If share fails, try clipboard as fallback
-      try {
-        const textToCopy = `${socialText} ${quizUrl}`
-        await navigator.clipboard.writeText(textToCopy)
-        setShareStatus('copied')
-        setTimeout(() => setShareStatus('idle'), 2000)
-      } catch (clipboardErr) {
-        console.error('Error copying to clipboard:', clipboardErr)
-        // Final fallback: show a prompt with the URL
-        const fallbackText = `${socialText} ${quizUrl}`
-        if (window.prompt) {
-          window.prompt('Copy this link to share:', fallbackText)
-        } else {
-          alert('Share link: ' + fallbackText)
-        }
-      }
-    }
-  }
-
   // Handle social media shares
-  const handleSocialShare = (platform: 'facebook' | 'pinterest' | 'whatsapp' | 'linkedin' | 'twitter' | 'email' | 'sms') => {
+  const handleSocialShare = (platform: 'facebook' | 'messenger' | 'pinterest' | 'email' | 'sms') => {
     const { styleDescription, socialText, quizUrl } = getShareContent()
     const fullText = `${socialText} ${quizUrl}`
 
@@ -282,43 +232,75 @@ function StyleProfileContent() {
         const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(quizUrl)}`
         window.open(facebookUrl, '_blank', 'width=600,height=400')
         break
+      case 'messenger':
+        // Facebook Messenger share
+        const messengerUrl = `fb-messenger://share?link=${encodeURIComponent(quizUrl)}`
+        // For desktop, use the web version
+        const messengerWebUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(quizUrl)}&app_id=YOUR_APP_ID&redirect_uri=${encodeURIComponent(quizUrl)}`
+        // Try mobile first, fallback to web
+        window.location.href = messengerUrl
+        setTimeout(() => {
+          window.open(messengerWebUrl, '_blank', 'width=600,height=400')
+        }, 500)
+        break
       case 'pinterest':
         // Pinterest supports pre-filled description and URL
         const imageUrl = 'https://images.squarespace-cdn.com/content/v1/5c3079f9f407b4ab43249324/b7717dac-2cf1-4f0a-8707-beebcd872331/Personal+Stylists+Australia+Spree+with+Me.jpg?format=2500w'
         const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(quizUrl)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(fullText)}`
         window.open(pinterestUrl, '_blank', 'width=750,height=550')
         break
-      case 'whatsapp':
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(fullText)}`
-        window.open(whatsappUrl, '_blank', 'width=600,height=400')
-        break
-      case 'linkedin':
-        const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(quizUrl)}`
-        window.open(linkedinUrl, '_blank', 'width=600,height=600')
-        break
-      case 'twitter':
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(socialText)}&url=${encodeURIComponent(quizUrl)}`
-        window.open(twitterUrl, '_blank', 'width=550,height=420')
-        break
       case 'email':
-        const emailSubject = 'Discover Your Signature Style'
+        const emailSubject = 'My Style Profile Results'
         // Include the full style profile in the email
-        let emailBody = `${socialText}\n\n`
-        emailBody += `Your Style Profile: ${styleDescription.toUpperCase()}\n\n`
+        let emailBody = `${styleDescription.toUpperCase()}\n\n`
 
         // Add the profile description if available
         if (fields.text) {
           emailBody += `${fields.text}\n\n`
         }
 
-        emailBody += `Take the quiz yourself at: ${quizUrl}`
+        emailBody += `---\n\nDiscover your own style profile at: ${quizUrl}`
 
         window.location.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
         break
       case 'sms':
-        const smsBody = `${socialText} ${quizUrl}`
+        // Include full profile in SMS
+        let smsBody = `My Style Profile: ${styleDescription.toUpperCase()}\n\n`
+
+        if (fields.text) {
+          smsBody += `${fields.text}\n\n`
+        }
+
+        smsBody += `Discover yours: ${quizUrl}`
+
         window.location.href = `sms:?&body=${encodeURIComponent(smsBody)}`
         break
+    }
+  }
+
+  // Handle copy to clipboard
+  const handleCopyToClipboard = async () => {
+    const { styleDescription, quizUrl } = getShareContent()
+
+    // Create full profile text for clipboard
+    let clipboardText = `MY STYLE PROFILE: ${styleDescription.toUpperCase()}\n\n`
+
+    if (fields.text) {
+      clipboardText += `${fields.text}\n\n`
+    }
+
+    clipboardText += `---\n\nDiscover your own style profile at: ${quizUrl}`
+
+    try {
+      await navigator.clipboard.writeText(clipboardText)
+      setCopyStatus('copied')
+      setTimeout(() => setCopyStatus('idle'), 2000)
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err)
+      // Fallback: show prompt with text
+      if (window.prompt) {
+        window.prompt('Copy this text:', clipboardText)
+      }
     }
   }
 
@@ -388,114 +370,111 @@ function StyleProfileContent() {
 
         {/* Share Section */}
         <motion.div
-          className="mt-12 space-y-6"
+          className="mt-12 space-y-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          {/* Share Heading */}
-          <div className="text-center">
-            <h3 className="text-lg md:text-xl font-semibold text-primary-900 mb-2">
-              Share Your Style Discovery
-            </h3>
-            <p className="text-sm md:text-base text-primary-600">
-              Let others discover their signature style too!
-            </p>
+          {/* Share with Friends Section */}
+          <div className="space-y-4">
+            <div className="text-center">
+              <h3 className="text-lg md:text-xl font-semibold text-primary-900 mb-2">
+                Share with Friends
+              </h3>
+              <p className="text-sm md:text-base text-primary-600">
+                Let others discover their signature style too!
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3 justify-center items-center">
+              {/* Facebook Messenger */}
+              <button
+                onClick={() => handleSocialShare('messenger')}
+                className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#0084FF] hover:bg-[#0073E6] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+                aria-label="Share on Messenger"
+              >
+                <Send className="w-4 h-4" />
+                <span className="hidden sm:inline">Messenger</span>
+              </button>
+
+              {/* Facebook */}
+              <button
+                onClick={() => handleSocialShare('facebook')}
+                className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#1877F2] hover:bg-[#166FE5] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+                aria-label="Share on Facebook"
+              >
+                <Facebook className="w-4 h-4" />
+                <span className="hidden sm:inline">Facebook</span>
+              </button>
+
+              {/* Pinterest */}
+              <button
+                onClick={() => handleSocialShare('pinterest')}
+                className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#E60023] hover:bg-[#CC001F] text-white font-medium transition-colors shadow-md hover:shadow-lg"
+                aria-label="Share on Pinterest"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
+                </svg>
+                <span className="hidden sm:inline">Pinterest</span>
+              </button>
+            </div>
           </div>
 
-          {/* Social Share Buttons */}
-          <div className="flex flex-wrap gap-3 justify-center items-center">
-            {/* General Share Button */}
-            <button
-              onClick={handleShare}
-              className="btn-primary flex items-center space-x-2"
-            >
-              {shareStatus === 'copied' ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  <span>Link Copied!</span>
-                </>
-              ) : (
-                <>
-                  <Share2 className="w-4 h-4" />
-                  <span>Share</span>
-                </>
-              )}
-            </button>
+          {/* Divider */}
+          <div className="border-t border-primary-200"></div>
 
-            {/* Facebook */}
-            <button
-              onClick={() => handleSocialShare('facebook')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#1877F2] hover:bg-[#166FE5] text-white font-medium transition-colors shadow-md hover:shadow-lg"
-              aria-label="Share on Facebook"
-            >
-              <Facebook className="w-4 h-4" />
-              <span className="hidden sm:inline">Facebook</span>
-            </button>
+          {/* Save for Later Section */}
+          <div className="space-y-4">
+            <div className="text-center">
+              <h3 className="text-lg md:text-xl font-semibold text-primary-900 mb-2">
+                Save for Later
+              </h3>
+              <p className="text-sm md:text-base text-primary-600">
+                Keep your full profile for yourself
+              </p>
+            </div>
 
-            {/* LinkedIn */}
-            <button
-              onClick={() => handleSocialShare('linkedin')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#0A66C2] hover:bg-[#004182] text-white font-medium transition-colors shadow-md hover:shadow-lg"
-              aria-label="Share on LinkedIn"
-            >
-              <Linkedin className="w-4 h-4" />
-              <span className="hidden sm:inline">LinkedIn</span>
-            </button>
+            <div className="flex flex-wrap gap-3 justify-center items-center">
+              {/* Email */}
+              <button
+                onClick={() => handleSocialShare('email')}
+                className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors shadow-md hover:shadow-lg"
+                aria-label="Share via Email"
+              >
+                <Mail className="w-4 h-4" />
+                <span className="hidden sm:inline">Email</span>
+              </button>
 
-            {/* X/Twitter */}
-            <button
-              onClick={() => handleSocialShare('twitter')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#000000] hover:bg-[#333333] text-white font-medium transition-colors shadow-md hover:shadow-lg"
-              aria-label="Share on X (Twitter)"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-              <span className="hidden sm:inline">X</span>
-            </button>
+              {/* SMS */}
+              <button
+                onClick={() => handleSocialShare('sms')}
+                className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-accent-600 hover:bg-accent-700 text-white font-medium transition-colors shadow-md hover:shadow-lg"
+                aria-label="Share via SMS"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span className="hidden sm:inline">SMS</span>
+              </button>
 
-            {/* Pinterest */}
-            <button
-              onClick={() => handleSocialShare('pinterest')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#E60023] hover:bg-[#CC001F] text-white font-medium transition-colors shadow-md hover:shadow-lg"
-              aria-label="Share on Pinterest"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
-              </svg>
-              <span className="hidden sm:inline">Pinterest</span>
-            </button>
-
-            {/* WhatsApp */}
-            <button
-              onClick={() => handleSocialShare('whatsapp')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-[#25D366] hover:bg-[#20BD5A] text-white font-medium transition-colors shadow-md hover:shadow-lg"
-              aria-label="Share on WhatsApp"
-            >
-              <Send className="w-4 h-4" />
-              <span className="hidden sm:inline">WhatsApp</span>
-            </button>
-
-            {/* Email */}
-            <button
-              onClick={() => handleSocialShare('email')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors shadow-md hover:shadow-lg"
-              aria-label="Share via Email"
-            >
-              <Mail className="w-4 h-4" />
-              <span className="hidden sm:inline">Email</span>
-            </button>
-
-            {/* SMS */}
-            <button
-              onClick={() => handleSocialShare('sms')}
-              className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-accent-600 hover:bg-accent-700 text-white font-medium transition-colors shadow-md hover:shadow-lg"
-              aria-label="Share via SMS"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span className="hidden sm:inline">SMS</span>
-            </button>
+              {/* Copy to Clipboard */}
+              <button
+                onClick={handleCopyToClipboard}
+                className="flex items-center space-x-2 px-4 py-2 md:px-5 md:py-3 rounded-lg bg-primary-800 hover:bg-primary-900 text-white font-medium transition-colors shadow-md hover:shadow-lg"
+                aria-label="Copy to Clipboard"
+              >
+                {copyStatus === 'copied' ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span className="hidden sm:inline">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    <span className="hidden sm:inline">Copy</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Quiz Again Button */}
