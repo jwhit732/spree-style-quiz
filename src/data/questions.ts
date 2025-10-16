@@ -87,7 +87,7 @@ export const questions: Question[] = [
       },
       {
         id: 'b',
-        text: 'Soft, delicate fabrics (silk, chiffon, cashmere',
+        text: 'Soft, delicate fabrics (silk, chiffon, cashmere)',
         archetype: 'romantic',
       },
       {
