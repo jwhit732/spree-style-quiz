@@ -51,7 +51,9 @@ function StyleProfileContent() {
 
   useEffect(() => {
     // Scroll to top when page loads
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+    }, 0)
 
     async function fetchProfile() {
       try {

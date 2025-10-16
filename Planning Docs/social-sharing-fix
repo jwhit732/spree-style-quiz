@@ -1,0 +1,169 @@
+package: social-share-fix-pack
+version: 1.0
+targets:
+  site_url: "https://spreewithme.com.au"
+  share_page_url: "https://spreewithme.com.au/style-quiz"
+  share_image_url: "https://images.squarespace-cdn.com/content/v1/5c3079f9f407b4ab43249324/b7717dac-2cf1-4f0a-8707-beebcd872331/Personal+Stylists+Australia+Spree+with+Me.jpg?format=2500w"
+  share_image_path: "Images/style-quiz-cover.webp"   # adjust for your project
+  page_globs:
+    - "pages/**/style-quiz.*"
+    - "app/**/style-quiz.*"
+    - "public/style-quiz/index.html"
+    - "src/**/Layout.*"            # head tags may be centralized
+  head_globs:
+    - "**/*.html"
+    - "app/**/layout.*"
+    - "pages/_document.*"
+    - "src/**/Head.*"
+
+assumptions:
+  - CLI can read/modify files, add assets, and inject HTML/JS.
+  - If style-quiz page is rendered by a layout, head mutations go to the layout.
+  - If site is embedded in an iframe (e.g., Squarespace), we can’t edit the parent, so we add a doc note for the integrator.
+
+tasks:
+
+  # 0) Asset: ensure a real, absolute image for Pinterest + OG
+  - id: ensure-share-image
+    type: ensure_file
+    file: "{{share_image_path}}"
+    if_missing:
+      action: write_binary
+      source: "INLINE_BASE64"       # replace later if you have a real image
+      note: "Temporary 1200x630 placeholder written if missing"
+
+  # 1) HEAD: canonical + Open Graph + Twitter cards
+  - id: inject-og-meta
+    type: upsert_meta
+    target_files: "{{head_globs}}"
+    where: head_end
+    metas:
+      - { name: "link[rel=canonical]", property: null, content: "{{share_page_url}}", tag: link, attrs: { rel: "canonical", href: "{{share_page_url}}" } }
+      - { property: "og:type", content: "website" }
+      - { property: "og:url", content: "{{share_page_url}}" }
+      - { property: "og:title", content: "Discover Your Style Profile" }
+      - { property: "og:description", content: "Take the quick style quiz and get your signature style." }
+      - { property: "og:image", content: "{{share_image_url}}" }
+      - { property: "og:image:width", content: "1200" }
+      - { property: "og:image:height", content: "630" }
+      - { name: "twitter:card", content: "summary_large_image" }
+      - { name: "twitter:title", content: "Discover Your Style Profile" }
+      - { name: "twitter:description", content: "Take the quick style quiz and get your signature style." }
+      - { name: "twitter:image", content: "{{share_image_url}}" }
+
+  # 2) Share buttons (universal endpoints) — drop-in block
+  - id: insert-share-buttons
+    type: insert_block
+    target_files: "{{page_globs}}"
+    anchor_query: "id=share-buttons|class=share|<!-- SHARE-BUTTONS -->"
+    position: after
+    if_absent: insert
+    block_lang: html
+    block: |
+      <!-- SHARE-BUTTONS -->
+      <div class="share flex gap-2" data-share>
+        <button id="shareBtn" type="button">Share</button>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{share_page_url | urlenc}}" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{share_page_url | urlenc}}" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://twitter.com/intent/tweet?text={{'I just discovered my style profile!' | urlenc}}&url={{share_page_url | urlenc}}" target="_blank" rel="noopener">X</a>
+        <a href="https://api.whatsapp.com/send?text={{'I just discovered my style profile! ' | urlenc}}{{share_page_url | urlenc}}" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://www.pinterest.com/pin/create/button/?url={{share_page_url | urlenc}}&media={{share_image_url | urlenc}}&description={{'Discover your style' | urlenc}}" target="_blank" rel="noopener">Pinterest</a>
+        <a href="mailto:?subject={{'Discover Your Style' | urlenc}}&body={{'Take the quiz: ' | urlenc}}{{share_page_url | urlenc}}">Email</a>
+        <a href="sms:?&body={{'Take the style quiz: ' | urlenc}}{{share_page_url | urlenc}}">SMS</a>
+      </div>
+
+  # 3) Web Share API with robust fallback
+  - id: add-web-share-script
+    type: append_script
+    target_files: "{{page_globs}}"
+    mode: module
+    if_absent_selector: "script[data-web-share]"
+    script: |
+      <script type="module" data-web-share>
+        const shareData = {
+          title: "Discover Your Style",
+          text: "I just discovered my style profile!",
+          url: "{{share_page_url}}"
+        };
+        const btn = document.getElementById("shareBtn");
+        function fallback(){
+          const container = document.querySelector('[data-share]');
+          if (container) container.classList.add('open'); // no-op if unstyled
+        }
+        async function doShare(){
+          try {
+            if (navigator.canShare && navigator.canShare(shareData)) {
+              await navigator.share(shareData);
+            } else {
+              fallback();
+            }
+          } catch(e){ fallback(); }
+        }
+        if (btn) btn.addEventListener('click', doShare);
+      </script>
+
+  # 4) If this page is embedded in an iframe, request Web Share permission
+  - id: document-embed-note
+    type: emit_note
+    note: |
+      If this page is embedded, the parent iframe must include: allow="web-share".
+      Example:
+      <iframe src="{{share_page_url}}" allow="web-share" ...></iframe>
+
+  # 5) Optional CSP relaxations (only if CSP exists and blocks share targets)
+  - id: patch-csp
+    type: csp_merge
+    policies:
+      img-src:
+        - "https://*.fbcdn.net"
+        - "https://*.pinimg.com"
+      connect-src:
+        - "https://api.whatsapp.com"
+      frame-src:
+        - "https://www.facebook.com"
+        - "https://www.linkedin.com"
+        - "https://www.pinterest.com"
+    when_present_in_files:
+      - "public/_headers"
+      - "netlify.toml"
+      - "vercel.json"
+      - "**/*.nginx*"
+      - "**/*.conf*"
+
+  # 6) Robots/header sanity for image fetchers
+  - id: allow-image-fetch
+    type: ensure_header_or_meta
+    target_files: "{{head_globs}}"
+    rules:
+      - check: "meta[name='robots']"
+        ensure_not_contains: "noimageindex"
+      - header_file: "public/_headers"
+        add_if_present:
+          - path: "/*"
+            headers:
+              - "Cache-Control: public, max-age=604800"
+              - "Referrer-Policy: strict-origin-when-cross-origin"
+
+  # 7) QA checks (curl/grep) — CLI should run and fail build if they fail
+  - id: qa-http
+    type: http_checks
+    checks:
+      - url: "{{share_image_url}}"
+        expect_status: 200
+        expect_content_type_prefix: "image/"
+      - url: "{{share_page_url}}"
+        expect_status: 200
+        must_contain:
+          - 'og:image'
+          - '{{share_image_url}}'
+          - 'twitter:card'
+          - 'canonical'
+
+  # 8) Optional debug helpers (emit to console)
+  - id: emit-debug-instructions
+    type: emit_note
+    note: |
+      After deploy:
+        • Facebook: run Sharing Debugger and “Scrape Again”.
+        • Paste the URL into LinkedIn/X/Pinterest to verify preview.
+        • Pinterest requires the 'media' param (already included).

@@ -29,7 +29,9 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
 
   // Scroll to top when component mounts
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+    }, 0)
   }, [])
 
   const onSubmit = async (data: FormData) => {

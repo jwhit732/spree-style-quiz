@@ -20,11 +20,17 @@ export default function QuizContainer() {
   const currentQuestion = questions[quizState.currentStep]
   const isLastStep = quizState.currentStep === questions.length - 1
   const prevStep = useRef(quizState.currentStep)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   // Auto scroll ONLY when step changes forward/back
   useEffect(() => {
     if (quizState.currentStep !== prevStep.current) {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      // Scroll both the container and window for maximum compatibility
+      const scrollTarget = containerRef.current || window
+      if ('scrollTo' in scrollTarget) {
+        scrollTarget.scrollTo(0, 0)
+      }
+      window.scrollTo(0, 0)
       prevStep.current = quizState.currentStep
     }
   }, [quizState.currentStep])
@@ -209,7 +215,7 @@ export default function QuizContainer() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-primary-50 via-white to-accent-50 py-2 md:py-6 min-h-full">
+    <div ref={containerRef} className="bg-gradient-to-br from-primary-50 via-white to-accent-50 py-2 md:py-6 min-h-full">
       {/* Progress Bar Only */}
       <div className="max-w-4xl mx-auto px-4 md:px-6 mb-3 md:mb-8">
         <ProgressBar
