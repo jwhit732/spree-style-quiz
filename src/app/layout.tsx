@@ -38,6 +38,52 @@ export default function RootLayout({
       <head>
         {/* Iframe optimization */}
         <meta name="referrer" content="origin-when-cross-origin" />
+        {/* Iframe height auto-resize script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (window.self !== window.top) {
+                  // We're in an iframe
+                  function sendHeight() {
+                    const height = Math.max(
+                      document.body.scrollHeight,
+                      document.body.offsetHeight,
+                      document.documentElement.clientHeight,
+                      document.documentElement.scrollHeight,
+                      document.documentElement.offsetHeight
+                    );
+                    window.parent.postMessage({
+                      type: 'iframeResize',
+                      height: height
+                    }, '*');
+                  }
+
+                  // Send height on load
+                  if (document.readyState === 'complete') {
+                    sendHeight();
+                  } else {
+                    window.addEventListener('load', sendHeight);
+                  }
+
+                  // Send height on resize
+                  window.addEventListener('resize', sendHeight);
+
+                  // Use MutationObserver to detect DOM changes
+                  const observer = new MutationObserver(sendHeight);
+                  observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true
+                  });
+
+                  // Send height periodically as backup
+                  setInterval(sendHeight, 100);
+                }
+              })();
+            `,
+          }}
+        />
       </head>
       <body className="min-h-screen overflow-x-hidden">
         {children}
