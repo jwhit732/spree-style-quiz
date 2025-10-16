@@ -27,19 +27,9 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
     }
   })
 
-  // Scroll to top when component mounts - force instant scroll for mobile reliability
+  // Scroll to top when component mounts
   useEffect(() => {
-    // Use multiple methods for maximum compatibility with mobile browsers
-    window.scrollTo(0, 0)
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
-
-    // Also try after a brief timeout to ensure DOM is ready
-    setTimeout(() => {
-      window.scrollTo(0, 0)
-      document.documentElement.scrollTop = 0
-      document.body.scrollTop = 0
-    }, 0)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
   const onSubmit = async (data: FormData) => {

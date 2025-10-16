@@ -50,17 +50,8 @@ function StyleProfileContent() {
   }
 
   useEffect(() => {
-    // Scroll to top when page loads - force instant scroll for mobile reliability
-    window.scrollTo(0, 0)
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
-
-    // Also try after a brief timeout to ensure DOM is ready
-    setTimeout(() => {
-      window.scrollTo(0, 0)
-      document.documentElement.scrollTop = 0
-      document.body.scrollTop = 0
-    }, 0)
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 
     async function fetchProfile() {
       try {

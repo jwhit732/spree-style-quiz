@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { questions } from '@/data/questions'
 import { QuizState } from '@/types/quiz'
@@ -19,6 +19,15 @@ export default function QuizContainer() {
 
   const currentQuestion = questions[quizState.currentStep]
   const isLastStep = quizState.currentStep === questions.length - 1
+  const prevStep = useRef(quizState.currentStep)
+
+  // Auto scroll ONLY when step changes forward/back
+  useEffect(() => {
+    if (quizState.currentStep !== prevStep.current) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      prevStep.current = quizState.currentStep
+    }
+  }, [quizState.currentStep])
 
   const handleAnswerChange = (value: string | string[]) => {
     if (!currentQuestion) return
