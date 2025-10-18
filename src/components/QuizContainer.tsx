@@ -32,6 +32,9 @@ export default function QuizContainer() {
       }
       window.scrollTo(0, 0)
       prevStep.current = quizState.currentStep
+
+      // Notify parent window (Squarespace) to scroll to iframe top
+      window.parent?.postMessage({ type: 'QUIZ_STEP', step: quizState.currentStep }, '*')
     }
   }, [quizState.currentStep])
 
@@ -54,6 +57,9 @@ export default function QuizContainer() {
         ...prev,
         isComplete: true
       }))
+
+      // Notify parent window to scroll to results
+      window.parent?.postMessage({ type: 'QUIZ_STEP', step: 'results' }, '*')
     } else {
       // Go to next question
       setQuizState(prev => ({
