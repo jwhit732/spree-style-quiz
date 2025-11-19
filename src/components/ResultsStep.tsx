@@ -162,6 +162,18 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           </motion.div>
         </motion.div>
 
+        {/* Email prompt text */}
+        <motion.div
+          className="text-center mb-6 md:mb-8 max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <p className="text-primary-700 text-sm md:text-base leading-relaxed">
+            After you see your signature style below, enter your email to access your full signature style description and personalised recommendations
+          </p>
+        </motion.div>
+
         {/* Results Content */}
         <div className="grid md:grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-12">
           {/* Primary Archetype */}
@@ -211,7 +223,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           transition={{ delay: 0.6, duration: 0.5 }}
         >
           <p className="text-primary-700 text-sm md:text-base leading-relaxed">
-            Style is deeply personal, and there are over 155 possible combinations! Articulating and understanding what your signature style is, is a great first step to embracing your style, or knowing how to update it authentically.
+            This is a great first step to embracing your style and knowing how to update it authentically.
           </p>
         </motion.div>
 
