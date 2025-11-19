@@ -227,7 +227,7 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
               Get Your Complete Description of Your Signature Style
             </h3>
             <p className="text-primary-700 text-sm md:text-base">
-              Understand what your signature style means exactly. <strong>Enter your email</strong> to receive your full description of your signature style with specific advice detailed recommendations, and unique tips to help you lean into your individual style.
+              Understand what your signature style means exactly. Enter your email to receive your full description of your signature style with specific advice detailed recommendations, and unique tips to help you lean into your individual style.
             </p>
           </div>
 
