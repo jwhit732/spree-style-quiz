@@ -162,6 +162,18 @@ export default function ResultsStep({ result, onRestart }: ResultsStepProps) {
           </motion.div>
         </motion.div>
 
+        {/* Call to Action Text */}
+        <motion.div
+          className="text-center mb-6 md:mb-8 max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          <p className="text-primary-700 text-sm md:text-base leading-relaxed">
+            After you see your signature style below, <strong>enter your email to access your full signature style description</strong> and personalised recommendations.
+          </p>
+        </motion.div>
+
         {/* Results Content */}
         <div className="grid md:grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-12">
           {/* Primary Archetype */}
